@@ -1,0 +1,11 @@
+@baseUrl = http://localhost:3000
+
+### PessoaController login
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "frankley",
+    "password": "changeme"
+}

@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:3000
+
+### PessoaController getPessoas
+# @name getPessoas
+GET {{baseUrl}}/pessoas 
+
+### PessoaController getPessoa por id
+# @name getPessoa
+GET {{baseUrl}}/pessoas/1
+
+### PessoaController createPessoa
+# @name createPessoa
+POST {{baseUrl}}/pessoas/create
+Content-Type: application/json
+
+{
+    "name": "Franlkey da Silva Santos",
+    "email": "frankleysilvasantos@gmail.com",
+    "password": "123456"
+}
+
+### PessoaController deleteRecado por id
+# @name deleteRecado
+DELETE  {{baseUrl}}/pessoas/1/delete
+
+
+### PessoaController updateRecado por id
+# @name updateRecado
+PATCH {{baseUrl}}/pessoas/1/update
+Content-Type: application/json
+
+{
+    "name": "Franlkey da Silva Santos"
+}

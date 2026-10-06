@@ -1,0 +1,2 @@
+export const CPF_VALIDATE = 'CPF_VALIDATE';
+export const CNPJ_VALIDATE = 'CNPJ_VALIDATE';

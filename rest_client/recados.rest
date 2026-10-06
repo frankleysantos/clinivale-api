@@ -1,0 +1,35 @@
+@baseUrl = http://localhost:3000
+
+### RecadosController getRecados
+# @name getRecados
+GET {{baseUrl}}/recados 
+
+### RecadosController getRecado por id
+# @name getRecado
+GET {{baseUrl}}/recados/12/recado
+
+### RecadosController createRecado
+# @name createRecado
+POST {{baseUrl}}/recados/create
+Content-Type: application/json
+
+{
+    "titulo": "Comprar remédio",
+    "descricao": "fazer compra farmacia",
+    "pessoaId": 1
+}
+
+### RecadosController deleteRecado por id
+# @name getRecado
+DELETE  {{baseUrl}}/recados/1/delete
+
+
+### RecadosController updateRecado por id
+# @name updateRecado
+PATCH {{baseUrl}}/recados/1/update
+Content-Type: application/json
+
+{
+    "titulo": "Comprar remédio atualizado",
+    "descricao": "fazer compra farmacia"
+}
