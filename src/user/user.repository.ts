@@ -28,6 +28,7 @@ export class UserRepository {
                     id: true,
                     name: true,
                     permissions: true,
+                    client_id: true,
                 },
                 clients: {
                     id: true,

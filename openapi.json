@@ -791,6 +791,11 @@
             "type": "string",
             "example": "123456",
             "description": "Senha do usuário"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente/clínica selecionado"
           }
         },
         "required": [
