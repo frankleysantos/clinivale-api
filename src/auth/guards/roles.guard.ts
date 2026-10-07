@@ -7,16 +7,19 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
-        console.log('roles');
     const isPublic = this.reflector.get<boolean>(IS_PUBLIC_KEY, context.getHandler());
 
     if (isPublic) return true;
+
+    const controllerName = context.getClass().name;
+    if (controllerName === 'AuthController') {
+      return true;
+    }
 
     const { user } = context.switchToHttp().getRequest();
 
     if (!user?.roles?.length) return false;
 
-    const controllerName = context.getClass().name;
     const methodName = context.getHandler().name;
 
     return user.roles.some((role) =>

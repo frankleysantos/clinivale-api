@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import * as bcrypt from 'bcrypt';
 import { Public } from './decorator/public.decorator';
+import { User } from './decorator/user.decorator';
 import { CNPJ_VALIDATE, CPF_VALIDATE } from 'src/global/common/constants/general.constant';
 import type { CpfOrCNPJ } from 'src/global/common/validator/cpf-or-cnpj.interface';
 
@@ -48,6 +49,13 @@ export class AuthController {
   @Get('/me')
   me(@Headers('authorization') authorization: string) {
     return this.authService.me(authorization);
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Alternar clínica ativa do usuário logado' })
+  @Post('/switch-client')
+  switchClient(@User() user: any, @Body('client_id') clientId: number) {
+    return this.authService.switchClient(user.id, clientId);
   }
 
 }

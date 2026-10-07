@@ -62,7 +62,17 @@
     "/users": {
       "get": {
         "operationId": "UserController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "client_id",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar usuários por cliente",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -73,7 +83,7 @@
             "bearer": []
           }
         ],
-        "summary": "Listar todos os usuários",
+        "summary": "Listar todos os usuários (filtrados por cliente)",
         "tags": [
           "Usuários"
         ]
@@ -362,6 +372,26 @@
         ]
       }
     },
+    "/auth/switch-client": {
+      "post": {
+        "operationId": "AuthController_switchClient",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Alternar clínica ativa do usuário logado",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
     "/clients/create": {
       "post": {
         "operationId": "ClientController_create",
@@ -395,7 +425,17 @@
     "/clients": {
       "get": {
         "operationId": "ClientController_findAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "client_id",
+            "required": false,
+            "in": "query",
+            "description": "ID do cliente",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -406,7 +446,7 @@
             "bearer": []
           }
         ],
-        "summary": "Listar todos os clientes",
+        "summary": "Listar clientes (filtrados por cliente)",
         "tags": [
           "Clientes"
         ]

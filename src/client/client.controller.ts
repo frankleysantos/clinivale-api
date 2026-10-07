@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { ClientService } from './client.service';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { User } from 'src/auth/decorator/user.decorator';
 
 @ApiTags('Clientes')
 @ApiBearerAuth()
@@ -16,11 +17,13 @@ export class ClientController {
     return this.clientService.create(createClientDto);
   }
 
-  @ApiOperation({ summary: 'Listar todos os clientes' })
+  @ApiOperation({ summary: 'Listar clientes (filtrados por cliente)' })
+  @ApiQuery({ name: 'client_id', required: false, type: Number, description: 'ID do cliente' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.clientService.findAll();
+  findAll(@Query('client_id') clientId?: string, @User() user?: any) {
+    const parsedClientId = clientId ? parseInt(clientId, 10) : undefined;
+    return this.clientService.findAll(parsedClientId, user);
   }
 
   @ApiOperation({ summary: 'Buscar cliente por ID' })

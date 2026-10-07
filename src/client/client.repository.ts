@@ -6,8 +6,9 @@ import { DeepPartial, Repository } from "typeorm";
 export class ClientRepository {
     constructor(@InjectRepository(ClientEntity) private readonly clientRepository: Repository<ClientEntity>) {}
 
-    getAll() {
+    getAll(client_id?: number) {
         return this.clientRepository.find({
+            where: client_id ? { id: client_id } : {},
             relations: ['users', 'patients']
         });   
     }

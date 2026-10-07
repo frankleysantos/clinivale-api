@@ -29,13 +29,16 @@ export class JwtGuard implements CanActivate {
       const user = await this.userRepository.getOneWithRoles(payload.id);
       if (!user) return false;
 
-      const selectedClient = payload.client_id
-        ? user.clients?.find((c) => c.id === payload.client_id)
+      const targetClientId = payload.client_id ? Number(payload.client_id) : null;
+
+      const selectedClient = targetClientId
+        ? user.clients?.find((c) => Number(c.id) === targetClientId)
         : user.clients?.[0] || null;
 
-      const activeRoles = user.roles?.filter(
-        (r) => r.client_id === selectedClient?.id || r.client_id == null,
-      ) || [];
+      const activeRoles = user.roles?.filter((r) => {
+        if (r.client_id == null) return true;
+        return selectedClient && Number(r.client_id) === Number(selectedClient.id);
+      }) || [];
 
       (user as any).client = selectedClient;
       (user as any).clientId = selectedClient?.id;

@@ -1,10 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from 'src/auth/decorator/user.decorator';
-import { UserResponseInterceptor } from './interceptor/user-response.interceptor';
 
 @ApiTags('Usuários')
 @ApiBearerAuth()
@@ -15,14 +14,17 @@ export class UserController {
   @ApiOperation({ summary: 'Criar novo usuário' })
   @Post('/create')
   create(@Body() createUserDto: CreateUserDto, @User() user) {
-    return this.userService.create(createUserDto, user?.clientId);
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    return this.userService.create(createUserDto, activeClientId);
   }
 
-  @ApiOperation({ summary: 'Listar todos os usuários' })
+  @ApiOperation({ summary: 'Listar todos os usuários (filtrados por cliente)' })
+  @ApiQuery({ name: 'client_id', required: false, type: Number, description: 'Filtrar usuários por cliente' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query('client_id') clientId?: string, @User() user?: any) {
+    const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
+    return this.userService.findAll(parsedClientId);
   }
 
   @ApiOperation({ summary: 'Buscar usuário por ID' })

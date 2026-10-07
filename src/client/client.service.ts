@@ -34,8 +34,9 @@ export class ClientService {
     return this.clientRepository.create(createClientDto);
   }
 
-  findAll() {
-    return this.clientRepository.getAll();
+  findAll(client_id?: number, user?: any) {
+    const targetClientId = client_id || user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    return this.clientRepository.getAll(targetClientId);
   }
 
   async findOne(id: number) {

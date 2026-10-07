@@ -11,8 +11,20 @@ export class UserRepository {
         return await this.userRepository.save(user);
     }
 
-    getAll(): Promise<UserEntity[]> {
-        return this.userRepository.find();
+    getAll(client_id?: number): Promise<UserEntity[]> {
+        if (client_id) {
+            return this.userRepository.find({
+                where: {
+                    clients: {
+                        id: client_id,
+                    },
+                },
+                relations: ['clients', 'roles'],
+            });
+        }
+        return this.userRepository.find({
+            relations: ['clients', 'roles'],
+        });
     }
 
     async getOneWithRoles(user_id: number): Promise<UserEntity | null> {

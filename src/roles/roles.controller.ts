@@ -16,7 +16,7 @@ export class RolesController {
     @ApiQuery({ name: 'client_id', required: false, type: Number, description: 'Filtrar roles por cliente' })
     @Get()
     getAllRoles(@Query('client_id') clientId?: string, @User() user?: any){
-        const parsedClientId = clientId ? parseInt(clientId, 10) : user?.clients?.[0]?.id;
+        const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
         return this.roleService.findAll(parsedClientId);
     }
 

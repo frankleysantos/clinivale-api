@@ -24,8 +24,8 @@ export class UserService {
     return this.userRepository.created(partial);
   }
 
-  findAll() {
-    return this.userRepository.getAll();
+  findAll(client_id?: number) {
+    return this.userRepository.getAll(client_id);
   }
 
   findOne(id: number, email: string) {

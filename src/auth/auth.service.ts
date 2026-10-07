@@ -15,8 +15,12 @@ export class AuthService {
 
   private getRolesForClient(roles: any[], clientId?: number | null) {
     if (!roles || roles.length === 0) return [];
+    if (!clientId) {
+      return roles.filter((role) => role.client_id == null);
+    }
+    const targetId = Number(clientId);
     return roles.filter(
-      (role) => role.client_id === clientId || role.client_id == null,
+      (role) => (role.client_id != null && Number(role.client_id) === targetId) || role.client_id == null,
     );
   }
 
@@ -115,8 +119,9 @@ export class AuthService {
       throw new UnauthorizedException('Usuário não encontrado');
     }
 
-    const selectedClient = payload.client_id
-      ? fullUser.clients?.find((c) => c.id === payload.client_id)
+    const targetClientId = payload.client_id ? Number(payload.client_id) : null;
+    const selectedClient = targetClientId
+      ? fullUser.clients?.find((c) => Number(c.id) === targetClientId)
       : fullUser.clients?.[0] || null;
 
     const rolesForSelectedClient = selectedClient
@@ -130,6 +135,45 @@ export class AuthService {
         roles: rolesForSelectedClient,
       },
       access_token: replaceToken,
+    };
+  }
+
+  async switchClient(userId: number, clientId: number): Promise<Auth> {
+    const fullUser = await this.userRepository.getOneWithRoles(userId);
+    if (!fullUser) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    const allClients = fullUser.clients || [];
+    const allRoles = fullUser.roles || [];
+
+    const targetClientId = Number(clientId);
+    const selectedClient = allClients.find((c) => Number(c.id) === targetClientId);
+    if (!selectedClient) {
+      throw new UnauthorizedException('Clínica selecionada não está vinculada a este usuário');
+    }
+
+    const clientRoles = this.getRolesForClient(allRoles, selectedClient.id);
+    if (clientRoles.length === 0) {
+      throw new UnauthorizedException('Usuário não possui nenhuma permissão (role) vinculada a esta clínica');
+    }
+
+    const payload = {
+      id: fullUser.id,
+      email: fullUser.email,
+      name: fullUser.name,
+      client_id: selectedClient.id,
+    };
+
+    const token = this.jwtService.sign(payload);
+
+    return {
+      user: {
+        ...fullUser,
+        client: selectedClient,
+        roles: clientRoles,
+      },
+      access_token: token,
     };
   }
 

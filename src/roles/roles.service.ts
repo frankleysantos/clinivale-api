@@ -22,7 +22,7 @@ export class RolesService {
 
     create(role: CreateRoleDto, user?: any) {
         const { client_id, ...rest } = role;
-        const targetClientId = client_id || user?.clients?.[0]?.id || user?.clientId;
+        const targetClientId = client_id || user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
 
         return this.roleRepository.save({
             ...rest,
