@@ -1,0 +1,941 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHome",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/hello": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/users/create": {
+      "post": {
+        "operationId": "UserController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Criar novo usuário",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "operationId": "UserController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar todos os usuários",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UserController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Buscar usuário por ID",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/users/{id}/update": {
+      "patch": {
+        "operationId": "UserController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar usuário por ID",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/users/{id}/delete": {
+      "delete": {
+        "operationId": "UserController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do usuário",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deletar usuário por ID",
+        "tags": [
+          "Usuários"
+        ]
+      }
+    },
+    "/roles": {
+      "get": {
+        "operationId": "RolesController_getAllRoles",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar todas as permissões/roles",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      }
+    },
+    "/roles/create": {
+      "post": {
+        "operationId": "RolesController_createRoles",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Criar nova permissão/role",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      }
+    },
+    "/roles/adm": {
+      "post": {
+        "operationId": "RolesController_rolesAdm",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Inicializar permissão ADM padrão",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAuthDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Realizar login de usuário",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/pwd": {
+      "post": {
+        "operationId": "AuthController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Gerar hash de senha",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/validate": {
+      "get": {
+        "operationId": "AuthController_verify",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Testar validação de CPF",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obter dados do usuário logado",
+        "tags": [
+          "Autenticação"
+        ]
+      }
+    },
+    "/clients/create": {
+      "post": {
+        "operationId": "ClientController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateClientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Criar novo cliente",
+        "tags": [
+          "Clientes"
+        ]
+      }
+    },
+    "/clients": {
+      "get": {
+        "operationId": "ClientController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar todos os clientes",
+        "tags": [
+          "Clientes"
+        ]
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "operationId": "ClientController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do cliente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Buscar cliente por ID",
+        "tags": [
+          "Clientes"
+        ]
+      },
+      "patch": {
+        "operationId": "ClientController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do cliente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateClientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar cliente por ID",
+        "tags": [
+          "Clientes"
+        ]
+      },
+      "delete": {
+        "operationId": "ClientController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do cliente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deletar cliente por ID",
+        "tags": [
+          "Clientes"
+        ]
+      }
+    },
+    "/patient/create": {
+      "post": {
+        "operationId": "PatientController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePatientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Criar novo paciente vinculado a um cliente",
+        "tags": [
+          "Pacientes"
+        ]
+      }
+    },
+    "/patient": {
+      "get": {
+        "operationId": "PatientController_findAll",
+        "parameters": [
+          {
+            "name": "client_id",
+            "required": false,
+            "in": "query",
+            "description": "ID do cliente para filtrar pacientes",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar pacientes (opcionalmente filtrados por cliente)",
+        "tags": [
+          "Pacientes"
+        ]
+      }
+    },
+    "/patient/{id}": {
+      "get": {
+        "operationId": "PatientController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do paciente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Buscar paciente por ID (inclui dados do cliente)",
+        "tags": [
+          "Pacientes"
+        ]
+      }
+    },
+    "/patient/{id}/update": {
+      "patch": {
+        "operationId": "PatientController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do paciente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePatientDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar paciente por ID",
+        "tags": [
+          "Pacientes"
+        ]
+      }
+    },
+    "/patient/{id}/delete": {
+      "delete": {
+        "operationId": "PatientController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID do paciente",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Deletar paciente por ID",
+        "tags": [
+          "Pacientes"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Clinivale API",
+    "description": "Documentação OpenAPI da Clinivale API (Gerada Automaticamente)",
+    "version": "0.0.1",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Maria Souza",
+            "description": "Nome do usuário"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456",
+            "description": "Senha do usuário"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@clinivale.com",
+            "description": "E-mail do usuário"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente a ser associado (opcional)"
+          }
+        },
+        "required": [
+          "name",
+          "password",
+          "email"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "PermissionDto": {
+        "type": "object",
+        "properties": {
+          "controller": {
+            "type": "string",
+            "example": "PatientController",
+            "description": "Nome do controller"
+          },
+          "method": {
+            "type": "string",
+            "example": "create",
+            "description": "Nome do método ou ação"
+          }
+        },
+        "required": [
+          "controller",
+          "method"
+        ]
+      },
+      "CreateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ADMIN",
+            "description": "Nome do papel/permissão"
+          },
+          "permissions": {
+            "example": [
+              {
+                "controller": "PatientController",
+                "method": "create"
+              }
+            ],
+            "description": "Lista de permissões",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionDto"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "permissions"
+        ]
+      },
+      "CreateAuthDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "admin@clinivale.com",
+            "description": "E-mail do usuário"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456",
+            "description": "Senha do usuário"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateClientDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente"
+          },
+          "name": {
+            "type": "string",
+            "example": "Clinica Exemplo",
+            "description": "Nome do cliente ou empresa"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "12345678900",
+            "description": "CPF do cliente (Pessoa Física)"
+          },
+          "cnpj": {
+            "type": "string",
+            "example": "12345678000199",
+            "description": "CNPJ do cliente (Pessoa Jurídica)"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FISICA",
+              "JURIDICA"
+            ],
+            "example": "FISICA",
+            "description": "Tipo do cliente"
+          },
+          "cellphone": {
+            "type": "string",
+            "example": "11999999999",
+            "description": "Telefone ou celular"
+          },
+          "city": {
+            "type": "string",
+            "example": "São Paulo",
+            "description": "Cidade"
+          },
+          "state": {
+            "type": "string",
+            "example": "SP",
+            "description": "Estado (UF)"
+          },
+          "email": {
+            "type": "string",
+            "example": "contato@clinicaexemplo.com",
+            "description": "E-mail do cliente"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ATIVO",
+              "INATIVO"
+            ],
+            "example": "ATIVO",
+            "description": "Status do cliente"
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
+      "UpdateClientDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "CreatePatientDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do paciente"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente vinculado ao paciente"
+          },
+          "name": {
+            "type": "string",
+            "example": "João da Silva",
+            "description": "Nome completo do paciente"
+          },
+          "cpf": {
+            "type": "string",
+            "example": "52998224725",
+            "description": "CPF válido do paciente"
+          },
+          "birthDate": {
+            "format": "date-time",
+            "type": "string",
+            "example": "1990-05-15",
+            "description": "Data de nascimento (YYYY-MM-DD)"
+          },
+          "cellphone": {
+            "type": "string",
+            "example": "11988887777",
+            "description": "Número de telefone/celular"
+          },
+          "email": {
+            "type": "string",
+            "example": "joao.silva@email.com",
+            "description": "Endereço de e-mail"
+          },
+          "address": {
+            "type": "string",
+            "example": "Rua das Flores, 123",
+            "description": "Logradouro/Endereço"
+          },
+          "neighborhood": {
+            "type": "string",
+            "example": "Jardins",
+            "description": "Bairro"
+          },
+          "city": {
+            "type": "string",
+            "example": "São Paulo",
+            "description": "Cidade"
+          },
+          "state": {
+            "type": "string",
+            "example": "SP",
+            "description": "Estado (UF)"
+          },
+          "country": {
+            "type": "string",
+            "example": "Brasil",
+            "description": "País"
+          },
+          "occupation": {
+            "type": "string",
+            "example": "Engenheiro",
+            "description": "Profissão"
+          }
+        },
+        "required": [
+          "client_id",
+          "name",
+          "cpf",
+          "birthDate",
+          "cellphone",
+          "email"
+        ]
+      },
+      "UpdatePatientDto": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  }
+}

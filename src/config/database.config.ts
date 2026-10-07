@@ -4,13 +4,15 @@ import { ConfigService } from '@nestjs/config';
 export const databaseConfig: TypeOrmModuleAsyncOptions = {
   inject: [ConfigService],
   useFactory: (configService: ConfigService) => ({
-    type: 'postgres',
-    host: configService.get('DB_HOST'),
-    port: configService.get<number>('DB_PORT'),
-    username: configService.get('DB_USERNAME'),
-    password: configService.get('DB_PASSWORD'),
-    database: configService.get('DB_DATABASE'),
+    type: 'mysql',
+    host: configService.get<string>('DB_HOST', 'localhost'),
+    port: configService.get<number>('DB_PORT', 3306),
+    username: configService.get<string>('DB_USERNAME', 'root'),
+    password: configService.get<string>('DB_PASSWORD', ''),
+    database: configService.get<string>('DB_DATABASE', 'clinivale'),
     autoLoadEntities: true,
-    synchronize: true,
+    synchronize: configService.get<string>('DB_SYNCHRONIZE') === 'true',
+    migrations: [__dirname + '/../database/migrations/*{.ts,.js}'],
+    migrationsRun: true,
   }),
 };

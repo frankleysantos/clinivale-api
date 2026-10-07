@@ -1,10 +1,9 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientRepository } from './client.repository';
 import { CNPJ_VALIDATE, CPF_VALIDATE } from 'src/global/common/constants/general.constant';
 import type { CpfOrCNPJ } from 'src/global/common/validator/cpf-or-cnpj.interface';
-
 
 @Injectable()
 export class ClientService {
@@ -18,23 +17,20 @@ export class ClientService {
   ) { }
 
   create(createClientDto: CreateClientDto) {
-    console.log(createClientDto);
     if (createClientDto.type === 'FISICA' && createClientDto.cpf) {
       const validateCPF = this.validarCpf.execute(`${createClientDto.cpf}`);
-      console.log('validar cpf', validateCPF);
       if (!validateCPF) {
-        throw new BadRequestException('CPF invalido');
+        throw new BadRequestException('CPF inválido');
       }
     } else if (createClientDto.type === 'JURIDICA' && createClientDto.cnpj) {
       const validateCNPJ = this.validarCNPJ.execute(`${createClientDto.cnpj}`);
-      console.log('validar cnpj', validateCNPJ)
       if (!validateCNPJ) {
-        throw new BadRequestException('CNPJ invalido');
+        throw new BadRequestException('CNPJ inválido');
       }
     } else {
       throw new BadRequestException('CPF ou CNPJ devem ser fornecidos');
     }
-    return;
+
     return this.clientRepository.create(createClientDto);
   }
 
@@ -42,15 +38,22 @@ export class ClientService {
     return this.clientRepository.getAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} client`;
+  async findOne(id: number) {
+    const client = await this.clientRepository.findOneById(id);
+    if (!client) {
+      throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
+    }
+    return client;
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    await this.findOne(id);
+    return this.clientRepository.update(id, updateClientDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.clientRepository.remove(id);
+    return { message: 'Cliente removido com sucesso' };
   }
 }

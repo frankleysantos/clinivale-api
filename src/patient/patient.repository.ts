@@ -5,20 +5,31 @@ import { DeepPartial, Repository } from "typeorm";
 export class PatientRepository {
     constructor(@InjectRepository(PatientEntity) private readonly patientRepository: Repository<PatientEntity>) {}
 
-    findAll() {
-        return this.patientRepository.find();
+    findAll(client_id?: number) {
+        return this.patientRepository.find({
+            where: client_id ? { clients: { id: client_id } } : {},
+            relations: ['clients'],
+            order: { id: 'DESC' },
+        });
     }
 
     findOneById(patient_id: number) {
-        return this.patientRepository.findOneBy({id: patient_id});
+        return this.patientRepository.findOne({
+            where: { id: patient_id },
+            relations: ['clients'],
+        });
     }
 
     create(patient: DeepPartial<PatientEntity>) {
         return this.patientRepository.save(patient);
     }
 
-    update(id: number, patient: DeepPartial<PatientEntity>) {
-        return this.patientRepository.update(id, patient);
-    }   
+    async update(id: number, patient: DeepPartial<PatientEntity>) {
+        await this.patientRepository.save({ id, ...patient });
+        return this.findOneById(id);
+    }
 
+    remove(id: number) {
+        return this.patientRepository.delete(id);
+    }
 }

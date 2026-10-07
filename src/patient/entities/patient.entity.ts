@@ -1,5 +1,5 @@
 import { ClientEntity } from "src/client/entities/client.entity";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('patients')
 export class PatientEntity {
@@ -39,10 +39,11 @@ export class PatientEntity {
     @Column({ type: 'varchar', length: 255, nullable: true })
     occupation: string;
 
-    // @Column() 
-    // client_id: number;
-
-    @ManyToOne(() => ClientEntity, client => client.patients)
-    @JoinColumn({ name: 'client_id' })
-    client: ClientEntity;
+    @ManyToMany(() => ClientEntity, client => client.patients, { eager: false })
+    @JoinTable({
+        name: 'client_patients',
+        joinColumn: { name: 'patient_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'client_id', referencedColumnName: 'id' },
+    })
+    clients: ClientEntity[];
 }

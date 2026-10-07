@@ -12,11 +12,15 @@ export class UserService {
   
   constructor(private readonly userRepository: UserRepository) {}
 
-  create(createUserDto: CreateUserDto, clientId) {
-    createUserDto.password = bcrypt.hashSync(createUserDto.password, 10);
+  create(createUserDto: CreateUserDto, loggedUserClientId?: number) {
+    const { client_id, ...rest } = createUserDto;
+    rest.password = bcrypt.hashSync(rest.password, 10);
+    const targetClientId = client_id || loggedUserClientId;
+
     const partial: DeepPartial<UserEntity> = {
-      ...createUserDto
-    }
+      ...rest,
+      ...(targetClientId ? { clients: [{ id: targetClientId }] } : {}),
+    };
     return this.userRepository.created(partial);
   }
 

@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 enum CLIENTS_STATUS_ENUM {
     ATIVO = 'ATIVO',
@@ -12,41 +13,51 @@ enum CLIENTS_TYPE {
 }
 
 export class CreateClientDto {
+    @ApiPropertyOptional({ example: 1, description: 'ID do cliente' })
     @IsOptional()
     @IsInt({message: "O campo ID deve ser um número inteiro"})
     @Type(() => Number)
     id?: number
 
+    @ApiProperty({ example: 'Clinica Exemplo', description: 'Nome do cliente ou empresa' })
     @IsNotEmpty({message: "O campo nome é obrigatório"})
     name: string;
 
+    @ApiPropertyOptional({ example: '12345678900', description: 'CPF do cliente (Pessoa Física)' })
     @IsOptional()
     @IsString({message: "O campo cpf deve ser uma string"})
     cpf?: string;
 
+    @ApiPropertyOptional({ example: '12345678000199', description: 'CNPJ do cliente (Pessoa Jurídica)' })
     @IsOptional()
     @IsString({message: "O campo cnpj deve ser uma string"})
     cnpj?: string;
 
+    @ApiProperty({ enum: CLIENTS_TYPE, example: CLIENTS_TYPE.FISICA, description: 'Tipo do cliente' })
     @IsEnum(CLIENTS_TYPE)
     type: CLIENTS_TYPE;
 
+    @ApiPropertyOptional({ example: '11999999999', description: 'Telefone ou celular' })
     @IsOptional()
     @IsString({message: "O campo celular deve ser uma string"})
     cellphone?: string;
 
+    @ApiPropertyOptional({ example: 'São Paulo', description: 'Cidade' })
     @IsOptional()
     @IsString({message: "O campo cidade deve ser uma string"})
     city?: string;
 
+    @ApiPropertyOptional({ example: 'SP', description: 'Estado (UF)' })
     @IsOptional()
     @IsString({message: "O campo estado deve ser uma string"})
     state?: string;
 
+    @ApiPropertyOptional({ example: 'contato@clinicaexemplo.com', description: 'E-mail do cliente' })
     @IsOptional()
     @IsString({message: "O campo email deve ser uma string"})
     email?: string;
 
+    @ApiPropertyOptional({ enum: CLIENTS_STATUS_ENUM, example: CLIENTS_STATUS_ENUM.ATIVO, description: 'Status do cliente' })
     @IsOptional()
     @IsEnum(CLIENTS_STATUS_ENUM)
     status?: CLIENTS_STATUS_ENUM;

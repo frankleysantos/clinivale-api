@@ -1,0 +1,384 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-10-07T10:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2023.5.8",
+  "resources": [
+    {
+      "_id": "wrk_clinivale_api",
+      "_type": "workspace",
+      "name": "Clinivale API",
+      "description": "Coleção completa das APIs da Clinivale API com exemplos e parâmetros configurados",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_clinivale_base",
+      "_type": "environment",
+      "parentId": "wrk_clinivale_api",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": "SEU_TOKEN_JWT_AQUI"
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_clinivale_api",
+      "name": "Autenticação",
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_auth_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@clinivale.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_auth_me",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Obter Dados do Usuário Logado (Me)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/auth/me",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_auth_pwd",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Gerar Hash de Senha",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/pwd",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"password\": \"123456\"\n}"
+      },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "fld_clients",
+      "_type": "request_group",
+      "parentId": "wrk_clinivale_api",
+      "name": "Clientes",
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_clients_list",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Listar Clientes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clients",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_clients_get",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Buscar Cliente por ID (Param: id=1)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/clients/1",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_clients_create",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Criar Cliente",
+      "method": "POST",
+      "url": "{{ _.base_url }}/clients/create",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Clinica Exemplo\",\n  \"cpf\": \"12345678900\",\n  \"cnpj\": null,\n  \"cellphone\": \"11999999999\",\n  \"email\": \"contato@clinicaexemplo.com\",\n  \"city\": \"São Paulo\",\n  \"state\": \"SP\",\n  \"type\": \"FISICA\",\n  \"status\": \"ATIVO\"\n}"
+      },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_clients_update",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Atualizar Cliente (Param: id=1)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/clients/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Clinica Exemplo Atualizada\"\n}"
+      },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_clients_delete",
+      "_type": "request",
+      "parentId": "fld_clients",
+      "name": "Deletar Cliente (Param: id=1)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/clients/1",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 5
+    },
+    {
+      "_id": "fld_patients",
+      "_type": "request_group",
+      "parentId": "wrk_clinivale_api",
+      "name": "Pacientes",
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_patients_list",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Listar Todos Pacientes",
+      "method": "GET",
+      "url": "{{ _.base_url }}/patient",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_patients_list_by_client",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Listar Pacientes por Cliente (Query Param: client_id=1)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/patient?client_id=1",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_patients_get",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Buscar Paciente por ID (Param: id=1)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/patient/1",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_patients_create",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Criar Paciente (Vinculado ao Cliente ID=1)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/patient/create",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"client_id\": 1,\n  \"name\": \"João da Silva\",\n  \"cpf\": \"52998224725\",\n  \"birthDate\": \"1990-05-15\",\n  \"cellphone\": \"11988887777\",\n  \"email\": \"joao.silva@email.com\",\n  \"address\": \"Rua das Flores, 123\",\n  \"neighborhood\": \"Jardins\",\n  \"city\": \"São Paulo\",\n  \"state\": \"SP\",\n  \"country\": \"Brasil\",\n  \"occupation\": \"Engenheiro\"\n}"
+      },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_patients_update",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Atualizar Paciente (Param: id=1)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/patient/1/update",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"João da Silva Santos\",\n  \"cellphone\": \"11977776666\"\n}"
+      },
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_patients_delete",
+      "_type": "request",
+      "parentId": "fld_patients",
+      "name": "Deletar Paciente (Param: id=1)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/patient/1/delete",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 6
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_clinivale_api",
+      "name": "Usuários",
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_users_list",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Listar Usuários",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_users_get",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Buscar Usuário por ID (Param: id=1)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users/1",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_users_create",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Criar Usuário",
+      "method": "POST",
+      "url": "{{ _.base_url }}/users/create",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Maria Souza\",\n  \"email\": \"maria@clinivale.com\",\n  \"password\": \"123456\"\n}"
+      },
+      "metaSortKey": 3
+    },
+    {
+      "_id": "req_users_update",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Atualizar Usuário (Param: id=1)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/users/1/update",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"Maria Souza Oliveira\"\n}"
+      },
+      "metaSortKey": 4
+    },
+    {
+      "_id": "req_users_delete",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Deletar Usuário (Param: id=1)",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/users/1/delete",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 5
+    },
+    {
+      "_id": "fld_roles",
+      "_type": "request_group",
+      "parentId": "wrk_clinivale_api",
+      "name": "Permissões (Roles)",
+      "metaSortKey": 5
+    },
+    {
+      "_id": "req_roles_list",
+      "_type": "request",
+      "parentId": "fld_roles",
+      "name": "Listar Roles",
+      "method": "GET",
+      "url": "{{ _.base_url }}/roles",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {},
+      "metaSortKey": 1
+    },
+    {
+      "_id": "req_roles_create",
+      "_type": "request",
+      "parentId": "fld_roles",
+      "name": "Criar Role",
+      "method": "POST",
+      "url": "{{ _.base_url }}/roles/create",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"ADMIN\",\n  \"permissions\": [\n    {\n      \"controller\": \"PatientController\",\n      \"method\": \"create\"\n    }\n  ]\n}"
+      },
+      "metaSortKey": 2
+    },
+    {
+      "_id": "req_roles_adm",
+      "_type": "request",
+      "parentId": "fld_roles",
+      "name": "Inicializar Role ADM (Pública)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/roles/adm",
+      "headers": [],
+      "body": {},
+      "metaSortKey": 3
+    }
+  ]
+}

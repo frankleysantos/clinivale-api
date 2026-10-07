@@ -46,8 +46,8 @@ export class ClientEntity {
     status: string;
 
     @Exclude()
-    @OneToMany(() => PatientEntity, patient => patient.client)
-    patients: PatientEntity[]
+    @ManyToMany(() => PatientEntity, patient => patient.clients)
+    patients: PatientEntity[];
 
     @ManyToMany(() => UserEntity, user => user.clients)
     users: UserEntity[];

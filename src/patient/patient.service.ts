@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
 import { PatientRepository } from './patient.repository';
@@ -15,42 +15,56 @@ export class PatientService {
     private readonly validateCpf: CpfOrCNPJ
   ) {}
 
-
-create(patient: CreatePatientDto) {
+  async create(patient: CreatePatientDto) {
     const { client_id, ...rest } = patient;
-    console.log('patient', patient)
     if (patient.cpf) {
       const validate = this.validateCpf.execute(patient.cpf);
       if (!validate) {
-        throw new BadRequestException('CPF invalido');
+        throw new BadRequestException('CPF inválido');
       }
     }
     const data: DeepPartial<PatientEntity> = {
-        ...rest,
-        client: {
-            id: client_id
-        }
+      ...rest,
+      clients: client_id ? [{ id: client_id }] : [],
     };
 
     return this.patientRepository.create(data);
-}
-
-  findAll() {
-    return this.patientRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  findAll(client_id?: number) {
+    return this.patientRepository.findAll(client_id);
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    const data: DeepPartial<PatientEntity> = {
-      ...updatePatientDto
+  async findOne(id: number) {
+    const patient = await this.patientRepository.findOneById(id);
+    if (!patient) {
+      throw new NotFoundException(`Paciente com ID ${id} não encontrado`);
     }
+    return patient;
+  }
+
+  async update(id: number, updatePatientDto: UpdatePatientDto) {
+    await this.findOne(id);
+
+    if (updatePatientDto.cpf) {
+      const validate = this.validateCpf.execute(updatePatientDto.cpf);
+      if (!validate) {
+        throw new BadRequestException('CPF inválido');
+      }
+    }
+
+    const { client_id, ...rest } = updatePatientDto;
+    const data: DeepPartial<PatientEntity> = {
+      ...rest,
+      ...(client_id ? { clients: [{ id: client_id }] } : {}),
+    };
+
     return this.patientRepository.update(id, data);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.patientRepository.remove(id);
+    return { message: 'Paciente removido com sucesso' };
   }
 }
