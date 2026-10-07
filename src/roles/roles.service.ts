@@ -3,7 +3,7 @@ import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { CreateRoleDto } from './dto/create-roles.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoleEntity } from './entities/role.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 @Injectable()
 export class RolesService {
@@ -13,11 +13,21 @@ export class RolesService {
         private readonly metadataScanner: MetadataScanner,
     ) {}
 
-    findAll() {
-        return this.roleRepository.find();
+    findAll(client_id?: number) {
+        return this.roleRepository.find({
+            where: client_id ? [{ client_id }, { client_id: IsNull() }] : {},
+            relations: ['client'],
+        });
     }
-    create(role: CreateRoleDto) {
-        return this.roleRepository.save(role);
+
+    create(role: CreateRoleDto, user?: any) {
+        const { client_id, ...rest } = role;
+        const targetClientId = client_id || user?.clients?.[0]?.id || user?.clientId;
+
+        return this.roleRepository.save({
+            ...rest,
+            ...(targetClientId ? { client_id: targetClientId, client: { id: targetClientId } } : {}),
+        });
     }
 
     async rolesAdm() {

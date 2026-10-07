@@ -185,7 +185,17 @@
     "/roles": {
       "get": {
         "operationId": "RolesController_getAllRoles",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "client_id",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar roles por cliente",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -756,11 +766,17 @@
             "items": {
               "$ref": "#/components/schemas/PermissionDto"
             }
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente vinculado à role (opcional)"
           }
         },
         "required": [
           "name",
-          "permissions"
+          "permissions",
+          "client_id"
         ]
       },
       "CreateAuthDto": {
@@ -864,7 +880,7 @@
           "client_id": {
             "type": "number",
             "example": 1,
-            "description": "ID do cliente vinculado ao paciente"
+            "description": "ID do cliente vinculado ao paciente (opcional; utiliza cliente do usuário logado por padrão)"
           },
           "name": {
             "type": "string",
@@ -924,7 +940,6 @@
           }
         },
         "required": [
-          "client_id",
           "name",
           "cpf",
           "birthDate",

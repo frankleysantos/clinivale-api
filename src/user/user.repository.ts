@@ -18,7 +18,7 @@ export class UserRepository {
     async getOneWithRoles(user_id: number): Promise<UserEntity | null> {
         return this.userRepository.findOne({
             where: { id: user_id },
-            relations: ['roles'],
+            relations: ['roles', 'clients'],
             select: {
                 id: true,
                 name: true,
@@ -28,7 +28,11 @@ export class UserRepository {
                     id: true,
                     name: true,
                     permissions: true,
-                }
+                },
+                clients: {
+                    id: true,
+                    name: true,
+                },
             },
         });
     }

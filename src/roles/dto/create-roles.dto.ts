@@ -24,4 +24,7 @@ export class CreateRoleDto {
     @ValidateNested({ each: true })
     @Type(() => PermissionDto)
     permissions: PermissionDto[];
+
+    @ApiProperty({ example: 1, description: 'ID do cliente vinculado à role (opcional)' })
+    client_id?: number;
 }

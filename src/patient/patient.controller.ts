@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiBearerAuth } from '@nestj
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { User } from 'src/auth/decorator/user.decorator';
 
 @ApiTags('Pacientes')
 @ApiBearerAuth()
@@ -12,16 +13,16 @@ export class PatientController {
 
   @ApiOperation({ summary: 'Criar novo paciente vinculado a um cliente' })
   @Post('create')
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+  create(@Body() createPatientDto: CreatePatientDto, @User() user: any) {
+    return this.patientService.create(createPatientDto, user);
   }
 
   @ApiOperation({ summary: 'Listar pacientes (opcionalmente filtrados por cliente)' })
   @ApiQuery({ name: 'client_id', required: false, type: Number, example: 1, description: 'ID do cliente para filtrar pacientes' })
   @Get()
-  findAll(@Query('client_id') clientId?: string) {
+  findAll(@Query('client_id') clientId?: string, @User() user?: any) {
     const parsedClientId = clientId ? parseInt(clientId, 10) : undefined;
-    return this.patientService.findAll(parsedClientId);
+    return this.patientService.findAll(parsedClientId, user);
   }
 
   @ApiOperation({ summary: 'Buscar paciente por ID (inclui dados do cliente)' })

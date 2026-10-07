@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { PatientEntity } from "src/patient/entities/patient.entity";
 import { UserEntity } from "src/user/entities/user.entity";
+import { RoleEntity } from "src/roles/entities/role.entity";
 import { Column, Entity, JoinColumn, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('clients')
@@ -51,5 +52,7 @@ export class ClientEntity {
 
     @ManyToMany(() => UserEntity, user => user.clients)
     users: UserEntity[];
-    
+
+    @OneToMany(() => RoleEntity, role => role.client)
+    roles: RoleEntity[];
 }

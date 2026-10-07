@@ -10,11 +10,11 @@ export class CreatePatientDto {
     @Type(() => Number)
     id?:number
 
-    @ApiProperty({ example: 1, description: 'ID do cliente vinculado ao paciente' })
-    @IsNotEmpty({message: 'O campo cliente é obrigatório!'})
+    @ApiPropertyOptional({ example: 1, description: 'ID do cliente vinculado ao paciente (opcional; utiliza cliente do usuário logado por padrão)' })
+    @IsOptional()
     @IsInt({message: 'O campo clientId deve ser um número inteiro!'})
     @Type(() => Number)
-    client_id: number
+    client_id?: number
 
     @ApiProperty({ example: 'João da Silva', description: 'Nome completo do paciente' })
     @IsNotEmpty({message: 'O campo nome é obrigatório!'})

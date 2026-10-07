@@ -4,6 +4,7 @@ import { UpdatePatientDto } from './dto/update-patient.dto';
 import { PatientRepository } from './patient.repository';
 import { DeepPartial } from 'typeorm';
 import { PatientEntity } from './entities/patient.entity';
+import { ClientEntity } from 'src/client/entities/client.entity';
 import type { CpfOrCNPJ } from 'src/global/common/validator/cpf-or-cnpj.interface';
 import { CPF_VALIDATE } from 'src/global/common/constants/general.constant';
 
@@ -15,7 +16,7 @@ export class PatientService {
     private readonly validateCpf: CpfOrCNPJ
   ) {}
 
-  async create(patient: CreatePatientDto) {
+  async create(patient: CreatePatientDto, user?: any) {
     const { client_id, ...rest } = patient;
     if (patient.cpf) {
       const validate = this.validateCpf.execute(patient.cpf);
@@ -23,16 +24,34 @@ export class PatientService {
         throw new BadRequestException('CPF inválido');
       }
     }
+
+    let clientEntities: DeepPartial<ClientEntity>[] = [];
+
+    if (client_id) {
+      clientEntities = [{ id: client_id }];
+    } else if (user?.clients && user.clients.length > 0) {
+      clientEntities = user.clients.map((c: any) => ({ id: c.id }));
+    } else if (user?.clientId) {
+      clientEntities = [{ id: user.clientId }];
+    }
+
     const data: DeepPartial<PatientEntity> = {
       ...rest,
-      clients: client_id ? [{ id: client_id }] : [],
+      clients: clientEntities,
     };
 
     return this.patientRepository.create(data);
   }
 
-  findAll(client_id?: number) {
-    return this.patientRepository.findAll(client_id);
+  findAll(client_id?: number, user?: any) {
+    let targetClientId = client_id;
+    if (!targetClientId && user?.clients && user.clients.length > 0) {
+      targetClientId = user.clients[0].id;
+    } else if (!targetClientId && user?.clientId) {
+      targetClientId = user.clientId;
+    }
+
+    return this.patientRepository.findAll(targetClientId);
   }
 
   async findOne(id: number) {
