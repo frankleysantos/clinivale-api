@@ -35,6 +35,10 @@ export class ClientService {
   }
 
   findAll(client_id?: number, user?: any) {
+    const isMasterClinic = user?.client?.name?.toLowerCase() === 'clinivale';
+    if (isMasterClinic && !client_id) {
+      return this.clientRepository.getAll();
+    }
     const targetClientId = client_id || user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
     return this.clientRepository.getAll(targetClientId);
   }

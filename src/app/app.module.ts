@@ -13,6 +13,7 @@ import { JwtGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { GlobalModule } from 'src/global/global.module';
+import { SeedModule } from 'src/seed/seed.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { GlobalModule } from 'src/global/global.module';
     ClientModule,
     PatientModule,
     RolesModule,
-    GlobalModule
+    GlobalModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [
