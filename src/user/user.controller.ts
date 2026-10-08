@@ -30,15 +30,17 @@ export class UserController {
   @ApiOperation({ summary: 'Buscar usuário por ID' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'ID do usuário' })
   @Get('/:id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.findOne(Number(id), '');
+  findOne(@Param('id', ParseIntPipe) id: number, @Query('client_id') clientId?: string, @User() user?: any) {
+    const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
+    return this.userService.findOne(Number(id), '', parsedClientId);
   }
 
   @ApiOperation({ summary: 'Atualizar usuário por ID' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'ID do usuário' })
   @Patch('/:id/update')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto, @User() user?: any) {
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    return this.userService.update(id, updateUserDto, activeClientId);
   }
 
   @ApiOperation({ summary: 'Deletar usuário por ID' })
@@ -48,3 +50,4 @@ export class UserController {
     return this.userService.remove(id);
   }
 }
+

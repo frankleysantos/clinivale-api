@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsArray, ValidateNested, IsString } from "class-validator";
+import { IsNotEmpty, IsArray, ValidateNested, IsString, IsOptional, IsInt } from "class-validator";
 import { Type } from "class-transformer";
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 class PermissionDto {
     @ApiProperty({ example: 'PatientController', description: 'Nome do controller' })
@@ -25,6 +25,9 @@ export class CreateRoleDto {
     @Type(() => PermissionDto)
     permissions: PermissionDto[];
 
-    @ApiProperty({ example: 1, description: 'ID do cliente vinculado à role (opcional)' })
+    @ApiPropertyOptional({ example: 1, description: 'ID do cliente vinculado à role (opcional)' })
+    @IsOptional()
+    @IsInt({ message: 'O ID do cliente deve ser um número inteiro' })
+    @Type(() => Number)
     client_id?: number;
-}
+}

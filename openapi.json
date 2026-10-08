@@ -102,6 +102,14 @@
               "example": 1,
               "type": "number"
             }
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -192,6 +200,26 @@
         ]
       }
     },
+    "/roles/available-permissions": {
+      "get": {
+        "operationId": "RolesController_getAvailablePermissions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Obter permissões disponíveis do sistema",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      }
+    },
     "/roles": {
       "get": {
         "operationId": "RolesController_getAllRoles",
@@ -217,6 +245,105 @@
           }
         ],
         "summary": "Listar todas as permissões/roles",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "operationId": "RolesController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da role",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Buscar perfil/role por ID",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      },
+      "patch": {
+        "operationId": "RolesController_updateRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da role",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Atualizar permissão/role por ID",
+        "tags": [
+          "Permissões (Roles)"
+        ]
+      },
+      "delete": {
+        "operationId": "RolesController_removeRole",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "ID da role",
+            "schema": {
+              "example": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Remover permissão/role por ID",
         "tags": [
           "Permissões (Roles)"
         ]
@@ -755,6 +882,17 @@
             "type": "number",
             "example": 1,
             "description": "ID do cliente a ser associado (opcional)"
+          },
+          "role_ids": {
+            "example": [
+              1,
+              2
+            ],
+            "description": "IDs das roles/perfis a serem associadas",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
           }
         },
         "required": [
@@ -815,9 +953,36 @@
         },
         "required": [
           "name",
-          "permissions",
-          "client_id"
+          "permissions"
         ]
+      },
+      "UpdateRoleDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "ADMIN",
+            "description": "Nome do papel/permissão"
+          },
+          "permissions": {
+            "example": [
+              {
+                "controller": "PatientController",
+                "method": "create"
+              }
+            ],
+            "description": "Lista de permissões",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionDto"
+            }
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente vinculado à role (opcional)"
+          }
+        }
       },
       "CreateAuthDto": {
         "type": "object",

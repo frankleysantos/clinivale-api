@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../decorator/public.decorator';
 
@@ -18,14 +18,26 @@ export class RolesGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
 
-    if (!user?.roles?.length) return false;
+    if (!user?.roles?.length) {
+      throw new ForbiddenException('Usuário não possui perfis/permissões vinculadas a esta clínica');
+    }
 
     const methodName = context.getHandler().name;
 
-    return user.roles.some((role) =>
+    const hasPermission = user.roles.some((role) =>
       role.permissions?.some(
-        (p) => p.controller === controllerName && p.method === methodName,
+        (p) =>
+          p.controller?.toLowerCase() === controllerName.toLowerCase() &&
+          p.method?.toLowerCase() === methodName.toLowerCase(),
       ),
     );
+
+    if (!hasPermission) {
+      throw new ForbiddenException('Você não tem permissão para realizar esta ação nesta clínica');
+    }
+
+    return true;
   }
 }
+
+
