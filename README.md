@@ -31,6 +31,22 @@
 $ npm install
 ```
 
+## Database Migrations
+
+```bash
+# Executar migrations pendentes
+$ npm run migration:run
+
+# Reverter a última migration executada
+$ npm run migration:revert
+
+# Gerar uma nova migration baseada nas alterações das entidades
+$ npm run migration:generate -- src/database/migrations/<NomeDaMigration>
+
+# Criar um arquivo de migration vazio
+$ npm run migration:create -- src/database/migrations/<NomeDaMigration>
+```
+
 ## Compile and run the project
 
 ```bash

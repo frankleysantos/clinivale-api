@@ -14,8 +14,7 @@ export class UserController {
   @ApiOperation({ summary: 'Criar novo usuário' })
   @Post('/create')
   create(@Body() createUserDto: CreateUserDto, @User() user) {
-    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
-    return this.userService.create(createUserDto, activeClientId);
+    return this.userService.create(createUserDto, user);
   }
 
   @ApiOperation({ summary: 'Listar todos os usuários (filtrados por cliente)' })

@@ -8,6 +8,16 @@
         "c:/dev/Projetos TI/clinivale-api",
         "c:/dev/Projetos TI/clinivale-front"
       ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "env": {
+        "MEMORY_FILE_PATH": "c:/Users/frank/OneDrive/Documentos/projetos/clinivale-api/.agents/memory.json"
+      }
     }
   }
 }

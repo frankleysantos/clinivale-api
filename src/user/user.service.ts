@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,16 +11,30 @@ export class UserService {
   
   constructor(private readonly userRepository: UserRepository) {}
 
-  create(createUserDto: CreateUserDto, loggedUserClientId?: number) {
+  create(createUserDto: CreateUserDto, user?: any) {
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+
     const { client_id, role_ids, ...rest } = createUserDto;
+
+    // Se o usuário tentar passar um client_id diferente do seu e não for a clínica master (ID 1)
+    if (client_id && Number(client_id) !== Number(activeClientId) && !isMasterClinic) {
+      throw new ForbiddenException('Apenas usuários da clínica principal (ID: 1) podem cadastrar usuários para outros clientes.');
+    }
+
+    const targetClientId = client_id || activeClientId;
+
+    if (!targetClientId) {
+      throw new BadRequestException('ID do cliente não informado ou usuário sem clínica vinculada');
+    }
+
     if (rest.password) {
       rest.password = bcrypt.hashSync(rest.password, 10);
     }
-    const targetClientId = client_id || loggedUserClientId;
 
     const partial: DeepPartial<UserEntity> = {
       ...rest,
-      ...(targetClientId ? { clients: [{ id: targetClientId }] } : {}),
+      clients: [{ id: targetClientId }],
     };
     return this.userRepository.created(partial, role_ids);
   }

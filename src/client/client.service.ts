@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { ClientRepository } from './client.repository';
@@ -16,7 +16,13 @@ export class ClientService {
     private readonly validarCNPJ: CpfOrCNPJ,
   ) { }
 
-  create(createClientDto: CreateClientDto) {
+  create(createClientDto: CreateClientDto, user?: any) {
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+    if (!isMasterClinic) {
+      throw new ForbiddenException('Apenas usuários da clínica principal (ID: 1) podem cadastrar novos clientes.');
+    }
+
     if (createClientDto.type === 'FISICA' && createClientDto.cpf) {
       const validateCPF = this.validarCpf.execute(`${createClientDto.cpf}`);
       if (!validateCPF) {

@@ -17,3 +17,7 @@ Antes de realizar qualquer alteração de código ou responder a requisições, 
 - Reaproveitar `UserEntity`, `RoleEntity`, `ClientEntity`, `PatientEntity` e seus respetivos repositórios.
 - Reutilizar injetores e modificadores (ex: validadores de CPF/CNPJ em `src/global/common/validator`).
 - Manter o padrão de DTOs do NestJS e Swagger Annotations (`@ApiTags`, `@ApiOperation`, `@ApiQuery`).
+
+## 5. Memória e Contexto do Projeto (.agents)
+- Consulte `.agents/PROJECT_SPEC.md` e o servidor de memória MCP (`.agents/mcp_config.json`) para consultar o histórico de decisões e regras já implementadas.
+- Sempre que uma funcionalidade estrutural for alterada ou adicionada, atualize `.agents/PROJECT_SPEC.md`.

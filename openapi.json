@@ -841,6 +841,21 @@
           "Pacientes"
         ]
       }
+    },
+    "/seed": {
+      "post": {
+        "operationId": "SeedController_runSeed",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Executar seed para criar cliente Clinivale, role ADMINISTRADOR e usuário master",
+        "tags": [
+          "Seed / Inicialização"
+        ]
+      }
     }
   },
   "info": {

@@ -1,6 +1,6 @@
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, IsNull } from 'typeorm';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import * as bcrypt from 'bcrypt';
 import { ClientEntity } from 'src/client/entities/client.entity';
@@ -73,7 +73,7 @@ export class SeedService implements OnApplicationBootstrap {
     let adminRole = await this.roleRepository.findOne({
       where: [
         { name: 'ADMINISTRADOR', client_id: clinivaleClient.id },
-        { name: 'ADMINISTRADOR', client_id: null },
+        { name: 'ADMINISTRADOR', client_id: IsNull() },
       ],
     });
 

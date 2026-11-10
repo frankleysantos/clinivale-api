@@ -13,8 +13,8 @@ export class ClientController {
 
   @ApiOperation({ summary: 'Criar novo cliente' })
   @Post('create')
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientService.create(createClientDto);
+  create(@Body() createClientDto: CreateClientDto, @User() user?: any) {
+    return this.clientService.create(createClientDto, user);
   }
 
   @ApiOperation({ summary: 'Listar clientes (filtrados por cliente)' })
