@@ -17,20 +17,21 @@ export class UserController {
     return this.userService.create(createUserDto, user);
   }
 
-  @ApiOperation({ summary: 'Listar todos os usuários (filtrados por cliente)' })
-  @ApiQuery({ name: 'client_id', required: false, type: Number, description: 'Filtrar usuários por cliente' })
+  @ApiOperation({ summary: 'Listar todos os usuários (filtrados por cliente ou all para clínica mestre)' })
+  @ApiQuery({ name: 'client_id', required: false, type: String, description: 'Filtrar usuários por cliente ou "all" (apenas clínica mestre)' })
   @UseInterceptors(ClassSerializerInterceptor)
   @Get()
   findAll(@Query('client_id') clientId?: string, @User() user?: any) {
-    const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
-    return this.userService.findAll(parsedClientId);
+    return this.userService.findAll(clientId, user);
   }
 
   @ApiOperation({ summary: 'Buscar usuário por ID' })
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'ID do usuário' })
   @Get('/:id')
   findOne(@Param('id', ParseIntPipe) id: number, @Query('client_id') clientId?: string, @User() user?: any) {
-    const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+    const parsedClientId = clientId ? parseInt(clientId, 10) : activeClientId;
     return this.userService.findOne(Number(id), '', parsedClientId);
   }
 
@@ -49,4 +50,3 @@ export class UserController {
     return this.userService.remove(id);
   }
 }
-

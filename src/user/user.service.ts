@@ -39,8 +39,33 @@ export class UserService {
     return this.userRepository.created(partial, role_ids);
   }
 
-  findAll(client_id?: number) {
-    return this.userRepository.getAll(client_id);
+  findAll(clientIdQuery?: string, user?: any) {
+    const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+    const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+
+    if (clientIdQuery === 'all') {
+      if (!isMasterClinic) {
+        throw new ForbiddenException('Apenas usuários da clínica principal podem visualizar usuários de todas as clínicas.');
+      }
+      return this.userRepository.getAll();
+    }
+
+    let targetClientId: number | undefined;
+    if (clientIdQuery) {
+      const parsed = parseInt(clientIdQuery, 10);
+      if (!isNaN(parsed)) {
+        if (parsed !== Number(activeClientId) && !isMasterClinic) {
+          throw new ForbiddenException('Apenas usuários da clínica principal podem visualizar usuários de outras clínicas.');
+        }
+        targetClientId = parsed;
+      }
+    }
+
+    if (targetClientId === undefined) {
+      targetClientId = activeClientId ? Number(activeClientId) : undefined;
+    }
+
+    return this.userRepository.getAll(targetClientId);
   }
 
   findOne(id: number, email: string, client_id?: number) {
@@ -61,4 +86,3 @@ export class UserService {
     return this.userRepository.delete(id);
   }
 }
-

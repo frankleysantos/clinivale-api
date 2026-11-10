@@ -20,11 +20,10 @@ export class RolesController {
     }
 
     @ApiOperation({ summary: 'Listar todas as permissões/roles' })
-    @ApiQuery({ name: 'client_id', required: false, type: Number, description: 'Filtrar roles por cliente' })
+    @ApiQuery({ name: 'client_id', required: false, type: String, description: 'Filtrar roles por cliente ou "all" para todas as clínicas (apenas clínica mestre)' })
     @Get()
     getAllRoles(@Query('client_id') clientId?: string, @User() user?: any){
-        const parsedClientId = clientId ? parseInt(clientId, 10) : (user?.client?.id || user?.clientId || user?.clients?.[0]?.id);
-        return this.roleService.findAll(parsedClientId);
+        return this.roleService.findAll(clientId, user);
     }
 
     @ApiOperation({ summary: 'Buscar perfil/role por ID' })
@@ -58,7 +57,14 @@ export class RolesController {
     @ApiOperation({ summary: 'Inicializar permissão ADM padrão' })
     @Post('adm')
     rolesAdm() {
-        return this.roleService.rolesAdm();
+        return this.roleService.create({
+            name: 'ADMINISTRADOR',
+            permissions: [
+                { controller: 'UserController', method: 'findAll' },
+                { controller: 'RolesController', method: 'getAllRoles' },
+                { controller: 'AuthController', method: 'login' },
+                { controller: 'ClientController', method: 'findAll' },
+            ]
+        });
     }
 }
-

@@ -67,9 +67,9 @@
             "name": "client_id",
             "required": false,
             "in": "query",
-            "description": "Filtrar usuários por cliente",
+            "description": "Filtrar usuários por cliente ou \"all\" (apenas clínica mestre)",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           }
         ],
@@ -83,7 +83,7 @@
             "bearer": []
           }
         ],
-        "summary": "Listar todos os usuários (filtrados por cliente)",
+        "summary": "Listar todos os usuários (filtrados por cliente ou all para clínica mestre)",
         "tags": [
           "Usuários"
         ]
@@ -228,9 +228,9 @@
             "name": "client_id",
             "required": false,
             "in": "query",
-            "description": "Filtrar roles por cliente",
+            "description": "Filtrar roles por cliente ou \"all\" para todas as clínicas (apenas clínica mestre)",
             "schema": {
-              "type": "number"
+              "type": "string"
             }
           }
         ],

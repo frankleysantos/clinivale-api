@@ -14,10 +14,40 @@ export class RolesService {
         private readonly metadataScanner: MetadataScanner,
     ) {}
 
-    findAll(client_id?: number) {
+    findAll(clientIdQuery?: string, user?: any) {
+        const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+        const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+
+        // Se for solicitada todas as clínicas ou sem filtro específico
+        if (clientIdQuery === 'all') {
+            if (!isMasterClinic) {
+                throw new ForbiddenException('Apenas usuários da clínica principal podem visualizar papéis de todas as clínicas.');
+            }
+            return this.roleRepository.find({
+                relations: ['client'],
+                order: { id: 'ASC' },
+            });
+        }
+
+        let targetClientId: number | undefined;
+        if (clientIdQuery) {
+            const parsed = parseInt(clientIdQuery, 10);
+            if (!isNaN(parsed)) {
+                if (parsed !== Number(activeClientId) && !isMasterClinic) {
+                    throw new ForbiddenException('Apenas usuários da clínica principal podem visualizar papéis de outras clínicas.');
+                }
+                targetClientId = parsed;
+            }
+        }
+
+        if (targetClientId === undefined) {
+            targetClientId = activeClientId ? Number(activeClientId) : undefined;
+        }
+
         return this.roleRepository.find({
-            where: client_id ? [{ client_id }, { client_id: IsNull() }] : {},
+            where: targetClientId ? [{ client_id: targetClientId }, { client_id: IsNull() }] : {},
             relations: ['client'],
+            order: { id: 'ASC' },
         });
     }
 
