@@ -200,6 +200,76 @@
         ]
       }
     },
+    "/professionals/councils": {
+      "get": {
+        "operationId": "ProfessionalAuxController_getCouncils",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de conselhos ativos"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar conselhos profissionais cadastrados",
+        "tags": [
+          "Profissionais de Saúde - Auxiliares"
+        ]
+      }
+    },
+    "/professionals/professions": {
+      "get": {
+        "operationId": "ProfessionalAuxController_getProfessions",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de profissões ativas com seus respectivos conselhos"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar profissões de saúde (Médico, Fisioterapeuta, etc.)",
+        "tags": [
+          "Profissionais de Saúde - Auxiliares"
+        ]
+      }
+    },
+    "/professionals/specialties": {
+      "get": {
+        "operationId": "ProfessionalAuxController_getSpecialties",
+        "parameters": [
+          {
+            "name": "profession_id",
+            "required": false,
+            "in": "query",
+            "description": "Filtrar especialidades da profissão",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de especialidades"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Listar especialidades ativas (com filtro por profissão)",
+        "tags": [
+          "Profissionais de Saúde - Auxiliares"
+        ]
+      }
+    },
     "/roles/available-permissions": {
       "get": {
         "operationId": "RolesController_getAvailablePermissions",
@@ -878,15 +948,15 @@
       "ProfessionalDto": {
         "type": "object",
         "properties": {
-          "professional_type": {
-            "type": "string",
-            "example": "MEDICO",
-            "description": "Tipo do profissional (MEDICO, FISIOTERAPEUTA, PSICOLOGO, etc.)"
+          "profession_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID da profissão (Médico, Fisioterapeuta, etc.)"
           },
-          "council_type": {
-            "type": "string",
-            "example": "CRM",
-            "description": "Tipo de conselho (CRM, CRO, CRP, COREN, etc.)"
+          "council_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do conselho profissional (opcional)"
           },
           "council_number": {
             "type": "string",
@@ -898,15 +968,20 @@
             "example": "SP",
             "description": "UF do conselho"
           },
-          "specialty": {
-            "type": "string",
-            "example": "Cardiologia",
-            "description": "Especialidade"
+          "specialty_ids": {
+            "example": [
+              1,
+              2
+            ],
+            "description": "IDs das especialidades vinculadas",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
           }
         },
         "required": [
-          "professional_type",
-          "council_type",
+          "profession_id",
           "council_number",
           "council_uf"
         ]

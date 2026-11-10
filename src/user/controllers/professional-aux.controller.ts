@@ -1,16 +1,13 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CouncilEntity } from '../entities/council.entity';
 import { ProfessionEntity } from '../entities/profession.entity';
 import { SpecialtyEntity } from '../entities/specialty.entity';
-import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @ApiTags('Profissionais de Saúde - Auxiliares')
 @ApiBearerAuth()
-@UseGuards(AuthGuard, RolesGuard)
 @Controller('professionals')
 export class ProfessionalAuxController {
     constructor(
