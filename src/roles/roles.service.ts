@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { CreateRoleDto } from './dto/create-roles.dto';
 import { UpdateRoleDto } from './dto/update-roles.dto';
@@ -29,8 +29,17 @@ export class RolesService {
     }
 
     create(role: CreateRoleDto, user?: any) {
+        const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+        const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+
         const { client_id, ...rest } = role;
-        const targetClientId = client_id || user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+
+        // Se passar um client_id diferente do seu e não for a clínica master (ID 1 ou Clinivale)
+        if (client_id && Number(client_id) !== Number(activeClientId) && !isMasterClinic) {
+            throw new ForbiddenException('Apenas usuários da clínica principal (ID: 1) podem criar perfis para outros clientes.');
+        }
+
+        const targetClientId = client_id || activeClientId;
 
         return this.roleRepository.save({
             ...rest,
@@ -44,10 +53,18 @@ export class RolesService {
             throw new NotFoundException('Perfil não encontrado');
         }
 
+        const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+        const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
+
         const { client_id, ...rest } = updateRoleDto;
+
+        if (client_id && Number(client_id) !== Number(activeClientId) && !isMasterClinic) {
+            throw new ForbiddenException('Apenas usuários da clínica principal (ID: 1) podem alterar o cliente deste perfil.');
+        }
+
         Object.assign(role, rest);
 
-        const targetClientId = client_id || user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
+        const targetClientId = client_id || role.client_id || activeClientId;
         if (targetClientId) {
             role.client_id = targetClientId;
         }
@@ -86,8 +103,18 @@ export class RolesService {
                     { name: 'remove', label: 'Excluir Usuário' },
                 ],
             },
+            RolesController: {
+                label: 'Perfis e Permissões (Roles)',
+                methods: [
+                    { name: 'createRoles', label: 'Criar Perfil' },
+                    { name: 'getAllRoles', label: 'Listar Perfis' },
+                    { name: 'findOne', label: 'Visualizar Perfil' },
+                    { name: 'updateRole', label: 'Editar Perfil' },
+                    { name: 'removeRole', label: 'Excluir Perfil' },
+                ],
+            },
             ClientController: {
-                label: 'Clientes / Estabelecimentos',
+                label: 'Clientes (Clínicas)',
                 methods: [
                     { name: 'create', label: 'Criar Cliente' },
                     { name: 'findAll', label: 'Listar Clientes' },
@@ -96,81 +123,47 @@ export class RolesService {
                     { name: 'remove', label: 'Excluir Cliente' },
                 ],
             },
-            RolesController: {
-                label: 'Perfis e Permissões',
-                methods: [
-                    { name: 'createRoles', label: 'Criar Perfil' },
-                    { name: 'getAllRoles', label: 'Listar Perfis' },
-                    { name: 'updateRole', label: 'Editar Perfil' },
-                    { name: 'removeRole', label: 'Excluir Perfil' },
-                ],
-            },
         };
 
         const controllers = this.discoveryService.getControllers();
-        const result: Array<{
+        const detectedPermissions: Array<{
             controller: string;
             label: string;
             methods: Array<{ name: string; label: string }>;
         }> = [];
 
         for (const wrapper of controllers) {
-            const { instance } = wrapper;
-            if (!instance) continue;
+            const { instance, metatype } = wrapper;
+            if (!instance || !metatype) continue;
 
-            const controllerName = instance.constructor.name;
-            if (controllerName === 'AppController' || controllerName === 'AuthController') continue;
+            const controllerName = metatype.name;
+            const mapped = controllersMap[controllerName];
 
-            const prototype = Object.getPrototypeOf(instance);
-            const methodNames = this.metadataScanner.getAllMethodNames(prototype);
+            if (mapped) {
+                detectedPermissions.push({
+                    controller: controllerName,
+                    label: mapped.label,
+                    methods: mapped.methods,
+                });
+            } else {
+                const prototype = Object.getPrototypeOf(instance);
+                const methodNames = this.metadataScanner
+                    .getAllMethodNames(prototype)
+                    .filter((m) => m !== 'constructor');
 
-            const known = controllersMap[controllerName];
-            const label = known?.label || controllerName;
-
-            const methods = methodNames.map((m) => {
-                const knownMethod = known?.methods.find((km) => km.name === m);
-                return {
-                    name: m,
-                    label: knownMethod?.label || m,
-                };
-            });
-
-            result.push({
-                controller: controllerName,
-                label,
-                methods,
-            });
-        }
-
-        return result;
-    }
-
-    async rolesAdm() {
-        const permissions: { controller: string; method: string }[] = [];
-
-        const controllers = this.discoveryService.getControllers();
-
-        for (const wrapper of controllers) {
-            const { instance } = wrapper;
-            if (!instance) continue;
-
-            const controllerName = instance.constructor.name;
-            const prototype = Object.getPrototypeOf(instance);
-
-            const methods = this.metadataScanner.getAllMethodNames(prototype);
-
-            for (const method of methods) {
-                permissions.push({ controller: controllerName, method });
+                if (methodNames.length > 0) {
+                    detectedPermissions.push({
+                        controller: controllerName,
+                        label: controllerName.replace('Controller', ''),
+                        methods: methodNames.map((name) => ({
+                            name,
+                            label: name,
+                        })),
+                    });
+                }
             }
         }
 
-        const existing = await this.roleRepository.findOne({ where: { name: 'ADMINISTRADOR' } });
-
-        if (existing) {
-            return this.roleRepository.save({ ...existing, permissions });
-        }
-
-        return this.roleRepository.save({ name: 'ADMINISTRADOR', permissions });
+        return detectedPermissions;
     }
 }
-
