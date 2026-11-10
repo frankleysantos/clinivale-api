@@ -1043,10 +1043,54 @@
       "UpdateUserDto": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "example": "Maria Souza",
+            "description": "Nome do usuário"
+          },
+          "password": {
+            "type": "string",
+            "example": "123456",
+            "description": "Senha do usuário"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do cliente a ser associado (opcional)"
+          },
+          "role_ids": {
+            "example": [
+              1,
+              2
+            ],
+            "description": "IDs das roles/perfis a serem associadas",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "is_health_professional": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indica se o usuário é um profissional de saúde"
+          },
+          "professional": {
+            "description": "Dados do profissional de saúde (se for profissional)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProfessionalDto"
+              }
+            ]
+          },
           "id": {
             "type": "number",
             "example": 1,
             "description": "ID do usuário sendo editado (permite manter o mesmo e-mail)"
+          },
+          "email": {
+            "type": "string",
+            "example": "maria@clinivale.com",
+            "description": "E-mail do usuário"
           }
         }
       },
