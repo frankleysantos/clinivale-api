@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { CouncilEntity } from '../entities/council.entity';
 import { ProfessionEntity } from '../entities/profession.entity';
 import { SpecialtyEntity } from '../entities/specialty.entity';
-import { AuthGuard } from 'src/auth/auth.guard';
-import { RolesGuard } from 'src/roles/guards/roles.guard';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @ApiTags('Profissionais de Saúde - Auxiliares')
 @ApiBearerAuth()

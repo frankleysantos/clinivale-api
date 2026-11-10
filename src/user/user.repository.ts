@@ -32,12 +32,12 @@ export class UserRepository {
                 specialties = await this.specialtyRepository.findBy({ id: In(specialty_ids) });
             }
 
-            const professional = this.professionalRepository.create({
+            const professional: ProfessionalEntity = this.professionalRepository.create({
                 ...profFields,
                 user_id: savedUser.id,
                 client_id: clientId,
                 specialties,
-            });
+            } as DeepPartial<ProfessionalEntity>);
             await this.professionalRepository.save(professional);
             savedUser.professional = professional;
         }
@@ -248,12 +248,12 @@ export class UserRepository {
                 }
                 await this.professionalRepository.save(userModel.professional);
             } else {
-                const newProf = this.professionalRepository.create({
+                const newProf: ProfessionalEntity = this.professionalRepository.create({
                     ...profFields,
                     user_id,
                     client_id: targetClientId,
                     ...(specialties ? { specialties } : {}),
-                });
+                } as DeepPartial<ProfessionalEntity>);
                 await this.professionalRepository.save(newProf);
                 userModel.professional = newProf;
             }
