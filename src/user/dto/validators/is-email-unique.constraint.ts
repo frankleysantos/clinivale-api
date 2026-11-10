@@ -13,10 +13,21 @@ export class IsEmailUniqueConstraint
 {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async validate(email: string) {
-   
+  async validate(email: string, args?: ValidationArguments) {
+    if (!email) return true;
+
     const exists = await this.userRepository.getOne(0, email);
-    return !exists;
+    if (!exists) return true;
+
+    // Se estiver em contexto de atualização e tiver o ID do usuário sendo editado
+    const obj = args?.object as any;
+    const editingUserId = obj?.id || obj?.user_id;
+
+    if (editingUserId && Number(exists.id) === Number(editingUserId)) {
+      return true; // É o próprio usuário mantendo seu e-mail
+    }
+
+    return false;
   }
 
   defaultMessage(args: ValidationArguments) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, ParseIntPipe, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -39,6 +39,7 @@ export class UserController {
   @ApiParam({ name: 'id', type: Number, example: 1, description: 'ID do usuário' })
   @Patch('/:id/update')
   update(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UpdateUserDto, @User() user?: any) {
+    updateUserDto.id = id;
     const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
     return this.userService.update(id, updateUserDto, activeClientId);
   }
