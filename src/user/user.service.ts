@@ -15,7 +15,7 @@ export class UserService {
     const activeClientId = user?.client?.id || user?.clientId || user?.clients?.[0]?.id;
     const isMasterClinic = Number(activeClientId) === 1 || user?.client?.name?.toLowerCase() === 'clinivale';
 
-    const { client_id, role_ids, ...rest } = createUserDto;
+    const { client_id, role_ids, is_health_professional, professional, ...rest } = createUserDto;
 
     // Se o usuário tentar passar um client_id diferente do seu e não for a clínica master (ID 1)
     if (client_id && Number(client_id) !== Number(activeClientId) && !isMasterClinic) {
@@ -36,7 +36,9 @@ export class UserService {
       ...rest,
       clients: [{ id: targetClientId }],
     };
-    return this.userRepository.created(partial, role_ids);
+
+    const professionalData = is_health_professional && professional ? professional : undefined;
+    return this.userRepository.created(partial, role_ids, professionalData);
   }
 
   findAll(clientIdQuery?: string, user?: any) {
@@ -75,7 +77,7 @@ export class UserService {
     return this.userRepository.getOne(id, email);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto & { role_ids?: number[] }, loggedUserClientId?: number) {
+  update(id: number, updateUserDto: UpdateUserDto & { role_ids?: number[]; is_health_professional?: boolean; professional?: any }, loggedUserClientId?: number) {
     if (updateUserDto.password) {
       updateUserDto.password = bcrypt.hashSync(updateUserDto.password, 10);
     }

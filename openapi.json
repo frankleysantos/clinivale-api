@@ -875,6 +875,42 @@
       }
     },
     "schemas": {
+      "ProfessionalDto": {
+        "type": "object",
+        "properties": {
+          "professional_type": {
+            "type": "string",
+            "example": "MEDICO",
+            "description": "Tipo do profissional (MEDICO, FISIOTERAPEUTA, PSICOLOGO, etc.)"
+          },
+          "council_type": {
+            "type": "string",
+            "example": "CRM",
+            "description": "Tipo de conselho (CRM, CRO, CRP, COREN, etc.)"
+          },
+          "council_number": {
+            "type": "string",
+            "example": "123456",
+            "description": "Número do conselho"
+          },
+          "council_uf": {
+            "type": "string",
+            "example": "SP",
+            "description": "UF do conselho"
+          },
+          "specialty": {
+            "type": "string",
+            "example": "Cardiologia",
+            "description": "Especialidade"
+          }
+        },
+        "required": [
+          "professional_type",
+          "council_type",
+          "council_number",
+          "council_uf"
+        ]
+      },
       "CreateUserDto": {
         "type": "object",
         "properties": {
@@ -908,6 +944,19 @@
             "items": {
               "type": "number"
             }
+          },
+          "is_health_professional": {
+            "type": "boolean",
+            "example": true,
+            "description": "Indica se o usuário é um profissional de saúde"
+          },
+          "professional": {
+            "description": "Dados do profissional de saúde (se for profissional)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProfessionalDto"
+              }
+            ]
           }
         },
         "required": [

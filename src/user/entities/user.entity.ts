@@ -1,6 +1,7 @@
 import { RoleEntity } from "src/roles/entities/role.entity";
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ClientEntity } from "src/client/entities/client.entity";
+import { ProfessionalEntity } from "./professional.entity";
 import { Exclude } from "class-transformer";
 
 @Entity('users')
@@ -31,14 +32,10 @@ export class UserEntity {
     @UpdateDateColumn()
     updatedAt?: Date;
 
-    // // clientes
-    // @ManyToOne(() => ClientEntity, client => client.users, {nullable: false})
-    // @JoinColumn({ name: 'client_id' })
-    // client: ClientEntity;
-    // // clientes
-
     @ManyToMany(() => ClientEntity, client => client.users, { eager: false })
     @JoinTable({ name: 'user_clients' })
     clients: ClientEntity[];
 
+    @OneToOne(() => ProfessionalEntity, professional => professional.user, { cascade: true })
+    professional?: ProfessionalEntity;
 }
