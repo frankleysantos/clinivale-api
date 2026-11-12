@@ -1294,7 +1294,7 @@
           "cpf": {
             "type": "string",
             "example": "52998224725",
-            "description": "CPF do paciente"
+            "description": "CPF do paciente (opcional SBIS, mas validado se informado)"
           },
           "cns": {
             "type": "string",
@@ -1316,6 +1316,11 @@
             "type": "string",
             "example": "Maria da Silva",
             "description": "Nome completo da mãe (obrigatório SBIS/CFM para desambiguação)"
+          },
+          "father_name": {
+            "type": "string",
+            "example": "José da Silva",
+            "description": "Nome completo do pai (opcional)"
           },
           "cellphone": {
             "type": "string",
@@ -1375,7 +1380,6 @@
         },
         "required": [
           "name",
-          "cpf",
           "birthDate",
           "gender",
           "mother_name",

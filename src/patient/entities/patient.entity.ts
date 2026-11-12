@@ -13,8 +13,8 @@ export class PatientEntity {
     @Column({ name: 'social_name', type: 'varchar', length: 255, nullable: true })
     social_name?: string;
 
-    @Column({ type: 'varchar', length: 255, unique: true })
-    cpf: string;
+    @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
+    cpf?: string;
 
     @Column({ type: 'varchar', length: 20, nullable: true })
     cns?: string;
@@ -28,6 +28,9 @@ export class PatientEntity {
 
     @Column({ name: 'mother_name', type: 'varchar', length: 255 })
     mother_name: string;
+
+    @Column({ name: 'father_name', type: 'varchar', length: 255, nullable: true })
+    father_name?: string;
 
     @Column({ type: 'varchar', length: 255 })
     cellphone: string;

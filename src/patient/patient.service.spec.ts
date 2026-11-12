@@ -55,6 +55,7 @@ describe('PatientService', () => {
       birthDate: new Date('1990-05-15'),
       gender: 'M',
       mother_name: 'Maria da Silva',
+      father_name: 'José da Silva',
       cellphone: '11988887777',
       email: 'joao.silva@email.com',
       postal_code: '01310100',
@@ -68,7 +69,7 @@ describe('PatientService', () => {
       occupation: 'Engenheiro',
     };
 
-    it('deve criar um paciente com todos os campos SBIS obrigatórios e opcionais', async () => {
+    it('deve criar um paciente com todos os campos SBIS obrigatórios e opcionais incluindo pai', async () => {
       mockValidateCpf.execute.mockReturnValue(true);
       mockPatientRepository.create.mockResolvedValue({ id: 1, ...validDto });
 
@@ -80,13 +81,24 @@ describe('PatientService', () => {
         name: validDto.name,
         gender: 'M',
         mother_name: 'Maria da Silva',
+        father_name: 'José da Silva',
         cpf: validDto.cpf,
         clients: [{ id: 1 }],
       }));
       expect(result).toHaveProperty('id', 1);
     });
 
-    it('deve lançar BadRequestException se o CPF for inválido', async () => {
+    it('deve permitir criar paciente sem CPF (recém-nascidos / menores)', async () => {
+      const dtoSemCpf = { ...validDto, cpf: undefined };
+      mockPatientRepository.create.mockResolvedValue({ id: 2, ...dtoSemCpf });
+
+      const result = await service.create(dtoSemCpf);
+      expect(mockValidateCpf.execute).not.toHaveBeenCalled();
+      expect(mockPatientRepository.create).toHaveBeenCalled();
+      expect(result).toHaveProperty('id', 2);
+    });
+
+    it('deve lançar BadRequestException se o CPF for informado e for inválido', async () => {
       mockValidateCpf.execute.mockReturnValue(false);
 
       await expect(service.create(validDto)).rejects.toThrow(BadRequestException);
@@ -96,7 +108,7 @@ describe('PatientService', () => {
 
   describe('findOne', () => {
     it('deve retornar o paciente encontrado', async () => {
-      const mockPatient = { id: 1, name: 'João da Silva', gender: 'M', mother_name: 'Maria' };
+      const mockPatient = { id: 1, name: 'João da Silva', gender: 'M', mother_name: 'Maria', father_name: 'José' };
       mockPatientRepository.findOneById.mockResolvedValue(mockPatient);
 
       const result = await service.findOne(1);
@@ -110,4 +122,3 @@ describe('PatientService', () => {
     });
   });
 });
-

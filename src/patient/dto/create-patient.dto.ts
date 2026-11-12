@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsDateString, IsEmail, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Length, Matches, MinLength } from "class-validator";
+import { IsEmail, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreatePatientDto {
@@ -26,10 +26,10 @@ export class CreatePatientDto {
     @IsString()
     social_name?: string;
 
-    @ApiProperty({ example: '52998224725', description: 'CPF do paciente' })
-    @IsNotEmpty({ message: 'O campo CPF é obrigatório!' })
+    @ApiPropertyOptional({ example: '52998224725', description: 'CPF do paciente (opcional SBIS, mas validado se informado)' })
+    @IsOptional()
     @IsString()
-    cpf: string;
+    cpf?: string;
 
     @ApiPropertyOptional({ example: '700000000000001', description: 'Cartão Nacional de Saúde (CNS / SUS)' })
     @IsOptional()
@@ -49,6 +49,11 @@ export class CreatePatientDto {
     @IsNotEmpty({ message: 'O campo nome da mãe é obrigatório!' })
     @IsString()
     mother_name: string;
+
+    @ApiPropertyOptional({ example: 'José da Silva', description: 'Nome completo do pai (opcional)' })
+    @IsOptional()
+    @IsString()
+    father_name?: string;
 
     @ApiProperty({ example: '11988887777', description: 'Número de telefone/celular' })
     @IsNotEmpty({ message: 'O campo celular é obrigatório!' })
