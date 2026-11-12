@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { databaseConfig } from 'src/config/database.config';
 import { ClientModule } from 'src/client/client.module';
 import { PatientModule } from 'src/patient/patient.module';
+import { MedicalRecordModule } from 'src/medical-record/medical-record.module';
 import { RolesModule } from 'src/roles/roles.module';
 import { JwtGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -26,6 +27,7 @@ import { SeedModule } from 'src/seed/seed.module';
     AuthModule,
     ClientModule,
     PatientModule,
+    MedicalRecordModule,
     RolesModule,
     GlobalModule,
     SeedModule,

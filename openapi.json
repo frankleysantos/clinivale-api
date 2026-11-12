@@ -912,6 +912,362 @@
         ]
       }
     },
+    "/medical-records": {
+      "post": {
+        "operationId": "MedicalRecordController_createRecord",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Iniciar novo atendimento / ficha clínica PEP",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/patient/{patientId}": {
+      "get": {
+        "operationId": "MedicalRecordController_findByPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Linha do tempo / histórico de atendimentos do paciente",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/{id}": {
+      "get": {
+        "operationId": "MedicalRecordController_findOneRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Detalhes de um atendimento PEP",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/{id}/finish": {
+      "patch": {
+        "operationId": "MedicalRecordController_finishRecord",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FinishMedicalRecordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Finalizar atendimento clínico com SOAP e condutas (Gera imutabilidade SBIS)",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/prescriptions": {
+      "post": {
+        "operationId": "MedicalRecordController_createPrescription",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePrescriptionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Emitir nova prescrição médica (Simples / Controle Especial / Antimicrobiano)",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/prescriptions/patient/{patientId}": {
+      "get": {
+        "operationId": "MedicalRecordController_findPrescriptionsByPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Histórico de prescrições do paciente",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/prescriptions/{id}/print": {
+      "get": {
+        "operationId": "MedicalRecordController_getPrescriptionPrintData",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Dados formatados para impressão da prescrição (2 vias se controle especial)",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/prescriptions/verify/{code}": {
+      "get": {
+        "operationId": "MedicalRecordController_verifyPrescription",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Validação pública de prescrição via QR Code / Código verificador",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/certificates": {
+      "post": {
+        "operationId": "MedicalRecordController_createCertificate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMedicalCertificateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Emitir atestado médico com controle de consentimento para CID",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/certificates/patient/{patientId}": {
+      "get": {
+        "operationId": "MedicalRecordController_findCertificatesByPatient",
+        "parameters": [
+          {
+            "name": "patientId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "client_id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Histórico de atestados do paciente",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
+    "/medical-records/certificates/verify/{code}": {
+      "get": {
+        "operationId": "MedicalRecordController_verifyCertificate",
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Validação pública de atestado médico via QR Code / Código verificador",
+        "tags": [
+          "Prontuário Eletrônico (PEP) / Receitas / Atestados"
+        ]
+      }
+    },
     "/seed": {
       "post": {
         "operationId": "SeedController_runSeed",
@@ -1409,6 +1765,291 @@
       "UpdatePatientDto": {
         "type": "object",
         "properties": {}
+      },
+      "VitalSignsDto": {
+        "type": "object",
+        "properties": {
+          "systolic_bp": {
+            "type": "number",
+            "example": 120,
+            "description": "Pressão Arterial Sistólica (mmHg)"
+          },
+          "diastolic_bp": {
+            "type": "number",
+            "example": 80,
+            "description": "Pressão Arterial Diastólica (mmHg)"
+          },
+          "heart_rate": {
+            "type": "number",
+            "example": 75,
+            "description": "Frequência Cardíaca (bpm)"
+          },
+          "respiratory_rate": {
+            "type": "number",
+            "example": 16,
+            "description": "Frequência Respiratória (irpm)"
+          },
+          "temperature": {
+            "type": "number",
+            "example": 36.5,
+            "description": "Temperatura Corporal (°C)"
+          },
+          "spo2": {
+            "type": "number",
+            "example": 98,
+            "description": "Saturação de Oxigênio SpO2 (%)"
+          },
+          "weight": {
+            "type": "number",
+            "example": 70.5,
+            "description": "Peso (kg)"
+          },
+          "height": {
+            "type": "number",
+            "example": 175,
+            "description": "Altura (cm)"
+          },
+          "bmi": {
+            "type": "number",
+            "example": 23,
+            "description": "Índice de Massa Corporal (IMC)"
+          }
+        }
+      },
+      "CreateMedicalRecordDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do paciente"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID da clínica/estabelecimento"
+          },
+          "record_type": {
+            "type": "string",
+            "example": "CONSULTA",
+            "description": "Tipo do atendimento (CONSULTA, RETORNO, URGENCIA, TELECONSULTA)"
+          },
+          "chief_complaint": {
+            "type": "string",
+            "example": "Dor de cabeça e febre há 3 dias",
+            "description": "Queixa principal"
+          },
+          "hda": {
+            "type": "string",
+            "example": "Paciente relata cefaleia frontal pulsátil...",
+            "description": "História da Doença Atual"
+          },
+          "past_history": {
+            "type": "string",
+            "example": "Hipertensa, nega diabetes. Alérgica a penicilina",
+            "description": "Histórico pessoal e alergias"
+          },
+          "family_history": {
+            "type": "string",
+            "example": "Mãe diabética, pai cardiopata",
+            "description": "Histórico familiar"
+          },
+          "physical_exam": {
+            "type": "string",
+            "example": "BEG, corado, hidratado, orientado em tempo e espaço",
+            "description": "Exame físico"
+          },
+          "vital_signs": {
+            "description": "Sinais vitais",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/VitalSignsDto"
+              }
+            ]
+          },
+          "diagnostic_hypothesis": {
+            "type": "string",
+            "example": "Cefaleia tensional / Enxaqueca",
+            "description": "Hipótese diagnóstica"
+          },
+          "cid10": {
+            "type": "string",
+            "example": "G43.9",
+            "description": "Código CID-10"
+          },
+          "clinical_conduct": {
+            "type": "string",
+            "example": "Orientado repouso e hidratação abundante",
+            "description": "Conduta clínica"
+          }
+        },
+        "required": [
+          "patient_id"
+        ]
+      },
+      "FinishMedicalRecordDto": {
+        "type": "object",
+        "properties": {
+          "cid10": {
+            "type": "string",
+            "example": "G43.9",
+            "description": "Código CID-10 final"
+          },
+          "clinical_conduct": {
+            "type": "string",
+            "example": "Conduta e orientações finais...",
+            "description": "Conduta clínica de encerramento"
+          }
+        }
+      },
+      "PrescriptionItemDto": {
+        "type": "object",
+        "properties": {
+          "medication_name": {
+            "type": "string",
+            "example": "Amoxicilina + Clavulanato de Potássio",
+            "description": "Nome do medicamento ou princípio ativo"
+          },
+          "concentration": {
+            "type": "string",
+            "example": "875mg + 125mg",
+            "description": "Concentração do medicamento"
+          },
+          "pharmaceutical_form": {
+            "type": "string",
+            "example": "Comprimido revestido",
+            "description": "Forma farmacêutica"
+          },
+          "dosage": {
+            "type": "string",
+            "example": "Tomar 1 comprimido via oral de 12 em 12 horas por 10 dias",
+            "description": "Posologia inequívoca"
+          },
+          "quantity": {
+            "type": "string",
+            "example": "20 (vinte) comprimidos",
+            "description": "Quantidade em algarismos e por extenso"
+          },
+          "route": {
+            "type": "string",
+            "example": "Oral",
+            "description": "Via de administração"
+          },
+          "continuous_use": {
+            "type": "boolean",
+            "example": false,
+            "description": "Uso contínuo"
+          }
+        },
+        "required": [
+          "medication_name",
+          "dosage",
+          "quantity"
+        ]
+      },
+      "CreatePrescriptionDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do paciente"
+          },
+          "medical_record_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do atendimento PEP vinculado"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID da clínica"
+          },
+          "prescription_type": {
+            "type": "string",
+            "example": "SIMPLES",
+            "description": "Tipo da receita: SIMPLES, CONTROLE_ESPECIAL, ANTIMICROBIANO"
+          },
+          "observations": {
+            "type": "string",
+            "example": "Tomar com alimentos para evitar desconforto gástrico",
+            "description": "Observações gerais"
+          },
+          "expires_at": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2026-12-12",
+            "description": "Data de validade da receita"
+          },
+          "items": {
+            "description": "Itens de medicamentos prescritos",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PrescriptionItemDto"
+            }
+          }
+        },
+        "required": [
+          "patient_id",
+          "prescription_type",
+          "items"
+        ]
+      },
+      "CreateMedicalCertificateDto": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do paciente"
+          },
+          "medical_record_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID do atendimento PEP vinculado"
+          },
+          "client_id": {
+            "type": "number",
+            "example": 1,
+            "description": "ID da clínica"
+          },
+          "certificate_type": {
+            "type": "string",
+            "example": "REPOUSO_MEDICO",
+            "description": "Tipo do atestado: REPOUSO_MEDICO, COMPARECIMENTO, APTIDAO_FISICA, ACOMPANHANTE"
+          },
+          "days_off": {
+            "type": "number",
+            "example": 3,
+            "description": "Dias de afastamento / repouso"
+          },
+          "days_off_text": {
+            "type": "string",
+            "example": "3 (três) dias",
+            "description": "Dias por extenso"
+          },
+          "cid10": {
+            "type": "string",
+            "example": "J06.9",
+            "description": "Código CID-10"
+          },
+          "cid_authorized_by_patient": {
+            "type": "boolean",
+            "example": true,
+            "description": "Consentimento explícito do paciente para inclusão de CID-10 (CFM 1.658/2002)"
+          },
+          "description": {
+            "type": "string",
+            "example": "Atesto para os devidos fins que o paciente necessita de repouso por motivo de saúde...",
+            "description": "Texto do atestado"
+          }
+        },
+        "required": [
+          "patient_id",
+          "certificate_type",
+          "cid_authorized_by_patient",
+          "description"
+        ]
       }
     }
   }
