@@ -1279,23 +1279,43 @@
           "client_id": {
             "type": "number",
             "example": 1,
-            "description": "ID do cliente vinculado ao paciente (opcional; utiliza cliente do usuário logado por padrão)"
+            "description": "ID do cliente vinculado ao paciente"
           },
           "name": {
             "type": "string",
             "example": "João da Silva",
             "description": "Nome completo do paciente"
           },
+          "social_name": {
+            "type": "string",
+            "example": "Joãozinho",
+            "description": "Nome social do paciente"
+          },
           "cpf": {
             "type": "string",
             "example": "52998224725",
-            "description": "CPF válido do paciente"
+            "description": "CPF do paciente"
+          },
+          "cns": {
+            "type": "string",
+            "example": "700000000000001",
+            "description": "Cartão Nacional de Saúde (CNS / SUS)"
           },
           "birthDate": {
             "format": "date-time",
             "type": "string",
             "example": "1990-05-15",
             "description": "Data de nascimento (YYYY-MM-DD)"
+          },
+          "gender": {
+            "type": "string",
+            "example": "M",
+            "description": "Sexo do paciente segundo padrão SBIS (M, F ou I)"
+          },
+          "mother_name": {
+            "type": "string",
+            "example": "Maria da Silva",
+            "description": "Nome completo da mãe (obrigatório SBIS/CFM para desambiguação)"
           },
           "cellphone": {
             "type": "string",
@@ -1307,14 +1327,29 @@
             "example": "joao.silva@email.com",
             "description": "Endereço de e-mail"
           },
+          "postal_code": {
+            "type": "string",
+            "example": "01310100",
+            "description": "CEP (Código de Endereçamento Postal)"
+          },
           "address": {
             "type": "string",
-            "example": "Rua das Flores, 123",
+            "example": "Avenida Paulista",
             "description": "Logradouro/Endereço"
+          },
+          "address_number": {
+            "type": "string",
+            "example": "1000",
+            "description": "Número do endereço"
+          },
+          "address_complement": {
+            "type": "string",
+            "example": "Apto 42",
+            "description": "Complemento do endereço"
           },
           "neighborhood": {
             "type": "string",
-            "example": "Jardins",
+            "example": "Bela Vista",
             "description": "Bairro"
           },
           "city": {
@@ -1325,7 +1360,7 @@
           "state": {
             "type": "string",
             "example": "SP",
-            "description": "Estado (UF)"
+            "description": "Estado (UF - 2 letras)"
           },
           "country": {
             "type": "string",
@@ -1342,8 +1377,9 @@
           "name",
           "cpf",
           "birthDate",
-          "cellphone",
-          "email"
+          "gender",
+          "mother_name",
+          "cellphone"
         ]
       },
       "UpdatePatientDto": {
