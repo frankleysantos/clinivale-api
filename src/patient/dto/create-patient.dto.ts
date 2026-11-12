@@ -31,6 +31,22 @@ export class CreatePatientDto {
     @IsString()
     cpf?: string;
 
+    @ApiPropertyOptional({ example: '123456789', description: 'Registro Geral (RG)' })
+    @IsOptional()
+    @IsString()
+    rg?: string;
+
+    @ApiPropertyOptional({ example: 'SSP', description: 'Órgão Emissor do RG' })
+    @IsOptional()
+    @IsString()
+    rg_issuer?: string;
+
+    @ApiPropertyOptional({ example: 'SP', description: 'UF do RG (2 letras)' })
+    @IsOptional()
+    @IsString()
+    @Length(2, 2, { message: 'A UF do RG deve ter 2 caracteres' })
+    rg_state?: string;
+
     @ApiPropertyOptional({ example: '700000000000001', description: 'Cartão Nacional de Saúde (CNS / SUS)' })
     @IsOptional()
     @IsString()
@@ -44,6 +60,11 @@ export class CreatePatientDto {
     @IsNotEmpty({ message: 'O campo sexo é obrigatório!' })
     @IsIn(['M', 'F', 'I'], { message: 'O sexo deve ser M (Masculino), F (Feminino) ou I (Indeterminado / Não informado)' })
     gender: string;
+
+    @ApiPropertyOptional({ example: 'PARDA', description: 'Raça/Cor segundo padrão IBGE (BRANCA, PRETA, PARDA, AMARELA, INDIGENA, NAO_INFORMADO)' })
+    @IsOptional()
+    @IsIn(['BRANCA', 'PRETA', 'PARDA', 'AMARELA', 'INDIGENA', 'NAO_INFORMADO'], { message: 'Raça/Cor inválida segundo padrão IBGE' })
+    race?: string;
 
     @ApiProperty({ example: 'Maria da Silva', description: 'Nome completo da mãe (obrigatório SBIS/CFM para desambiguação)' })
     @IsNotEmpty({ message: 'O campo nome da mãe é obrigatório!' })

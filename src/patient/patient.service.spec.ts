@@ -51,9 +51,13 @@ describe('PatientService', () => {
       name: 'João da Silva',
       social_name: 'Joãozinho',
       cpf: '52998224725',
+      rg: '123456789',
+      rg_issuer: 'SSP',
+      rg_state: 'SP',
       cns: '700000000000001',
       birthDate: new Date('1990-05-15'),
       gender: 'M',
+      race: 'PARDA',
       mother_name: 'Maria da Silva',
       father_name: 'José da Silva',
       cellphone: '11988887777',
@@ -69,7 +73,7 @@ describe('PatientService', () => {
       occupation: 'Engenheiro',
     };
 
-    it('deve criar um paciente com todos os campos SBIS obrigatórios e opcionais incluindo pai', async () => {
+    it('deve criar um paciente com todos os campos SBIS obrigatórios e opcionais incluindo raça e RG', async () => {
       mockValidateCpf.execute.mockReturnValue(true);
       mockPatientRepository.create.mockResolvedValue({ id: 1, ...validDto });
 
@@ -80,8 +84,10 @@ describe('PatientService', () => {
       expect(mockPatientRepository.create).toHaveBeenCalledWith(expect.objectContaining({
         name: validDto.name,
         gender: 'M',
+        race: 'PARDA',
         mother_name: 'Maria da Silva',
         father_name: 'José da Silva',
+        rg: '123456789',
         cpf: validDto.cpf,
         clients: [{ id: 1 }],
       }));
@@ -107,8 +113,8 @@ describe('PatientService', () => {
   });
 
   describe('findOne', () => {
-    it('deve retornar o paciente encontrado', async () => {
-      const mockPatient = { id: 1, name: 'João da Silva', gender: 'M', mother_name: 'Maria', father_name: 'José' };
+    it('deve retornar o paciente encontrado com dados completos', async () => {
+      const mockPatient = { id: 1, name: 'João da Silva', gender: 'M', race: 'PARDA', mother_name: 'Maria' };
       mockPatientRepository.findOneById.mockResolvedValue(mockPatient);
 
       const result = await service.findOne(1);

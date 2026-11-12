@@ -1296,6 +1296,21 @@
             "example": "52998224725",
             "description": "CPF do paciente (opcional SBIS, mas validado se informado)"
           },
+          "rg": {
+            "type": "string",
+            "example": "123456789",
+            "description": "Registro Geral (RG)"
+          },
+          "rg_issuer": {
+            "type": "string",
+            "example": "SSP",
+            "description": "Órgão Emissor do RG"
+          },
+          "rg_state": {
+            "type": "string",
+            "example": "SP",
+            "description": "UF do RG (2 letras)"
+          },
           "cns": {
             "type": "string",
             "example": "700000000000001",
@@ -1311,6 +1326,11 @@
             "type": "string",
             "example": "M",
             "description": "Sexo do paciente segundo padrão SBIS (M, F ou I)"
+          },
+          "race": {
+            "type": "string",
+            "example": "PARDA",
+            "description": "Raça/Cor segundo padrão IBGE (BRANCA, PRETA, PARDA, AMARELA, INDIGENA, NAO_INFORMADO)"
           },
           "mother_name": {
             "type": "string",

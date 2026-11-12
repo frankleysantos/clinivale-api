@@ -16,6 +16,15 @@ export class PatientEntity {
     @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
     cpf?: string;
 
+    @Column({ type: 'varchar', length: 50, nullable: true })
+    rg?: string;
+
+    @Column({ name: 'rg_issuer', type: 'varchar', length: 50, nullable: true })
+    rg_issuer?: string;
+
+    @Column({ name: 'rg_state', type: 'varchar', length: 2, nullable: true })
+    rg_state?: string;
+
     @Column({ type: 'varchar', length: 20, nullable: true })
     cns?: string;
 
@@ -25,6 +34,10 @@ export class PatientEntity {
     // 'M' | 'F' | 'I' (Masculino, Feminino, Indeterminado / Não Informado)
     @Column({ type: 'varchar', length: 20 })
     gender: string;
+
+    // Padrão IBGE: 'BRANCA' | 'PRETA' | 'PARDA' | 'AMARELA' | 'INDIGENA' | 'NAO_INFORMADO'
+    @Column({ type: 'varchar', length: 50, nullable: true })
+    race?: string;
 
     @Column({ name: 'mother_name', type: 'varchar', length: 255 })
     mother_name: string;
