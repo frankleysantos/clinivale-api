@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsEmail, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsEmail, IsIn, IsInt, IsNotEmpty, IsOptional, IsString, Length, ValidateIf } from "class-validator";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreatePatientDto {
@@ -81,8 +81,9 @@ export class CreatePatientDto {
     @IsString()
     cellphone: string;
 
-    @ApiPropertyOptional({ example: 'joao.silva@email.com', description: 'Endereço de e-mail' })
+    @ApiPropertyOptional({ example: 'joao.silva@email.com', description: 'Endereço de e-mail (opcional)' })
     @IsOptional()
+    @ValidateIf((o) => o.email !== '' && o.email !== null && o.email !== undefined)
     @IsEmail({}, { message: 'E-mail inválido' })
     email?: string;
 

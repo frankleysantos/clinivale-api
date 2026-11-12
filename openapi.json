@@ -1350,7 +1350,7 @@
           "email": {
             "type": "string",
             "example": "joao.silva@email.com",
-            "description": "Endereço de e-mail"
+            "description": "Endereço de e-mail (opcional)"
           },
           "postal_code": {
             "type": "string",
